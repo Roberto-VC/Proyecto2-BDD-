@@ -6,10 +6,18 @@ CREATE TABLE usuario (
 	PRIMARY KEY (nombre_usuario)
 );
 
+CREATE TABLE seguridad (
+	id_intento VARCHAR(32) NOT NULL,
+	fecha DATE	NOT NULL,
+	usuario VARCHAR(32) NOT NULL,
+	FOREIGN KEY (usuario) REFERENCES usuario(nombre_usuario) ON DELETE CASCADE 
+);
+
 CREATE TABLE perfil (
 	usuario VARCHAR(32) NOT NULL,
 	nombre	VARCHAR(32) NOT NULL,
 	id	VARCHAR(32) NOT NULL,
+	fecha_nacimiento DATE NOT NULL,
 	estado_vista VARCHAR(12) NOT NULL,
 	estado_perfil VARCHAR(12) NOT NULL,
 	PRIMARY KEY (id),
@@ -24,6 +32,15 @@ CREATE TABLE multimedia (
 	links VARCHAR(240) NOT NULL,
 	duracion INT NOT NULL,
 	PRIMARY KEY (id)
+);
+
+CREATE TABLE historial (
+	id_contenido VARCHAR(32) NOT NULL,
+	fecha_visualizacion DATE NOT NULL,
+	capitulo int,
+	id_perfil VARCHAR(32) NOT NULL,
+	FOREIGN KEY(id_contenido) REFERENCES multimedia(id) ON DELETE CASCADE,
+	FOREIGN KEY (id_perfil) REFERENCES perfil(id) ON DELETE CASCADE
 );
 
 CREATE TABLE premios (
@@ -105,9 +122,15 @@ CREATE TABLE recomendaciones (
 );
 
 CREATE TABLE anuncios (
-	id_usuario VARCHAR(32) NOT NULL,
 	id_anuncio VARCHAR(32) NOT NULL,
 	nombre_anunciante VARCHAR(32) NOT NULL,
 	links VARCHAR(240) NOT NULL,
-	FOREIGN KEY (id_usuario) REFERENCES usuario(nombre_usuario) ON DELETE CASCADE
+	PRIMARY KEY (id_anuncio)
+);
+
+CREATE TABLE anuncio_contenido (
+	id_anuncio VARCHAR(32) NOT NULL,
+	id_contenido VARCHAR(32) NOT NULL,
+	FOREIGN KEY (id_anuncio) REFERENCES anuncios(id_anuncio) ON DELETE CASCADE,
+	FOREIGN KEY (id_contenido) REFERENCES multimedia(id) ON DELETE CASCADE
 );
