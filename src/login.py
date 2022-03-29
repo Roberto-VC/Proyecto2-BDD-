@@ -36,4 +36,3 @@ def loginInfo(usuario, contraseña):
         print("Esa contraseña no es la correcta...")
         return False
 
-print(loginInfo('junwoolee', 'bts123'))
