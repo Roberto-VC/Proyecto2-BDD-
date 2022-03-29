@@ -1,6 +1,6 @@
 CREATE TABLE usuario (
 	nombre_usuario VARCHAR(32) NOT NULL,
-	contraseña VARCHAR(32) NOT NULL,
+	contraseña VARCHAR(150) NOT NULL,
 	correo	VARCHAR(50)	NOT NULL,
 	estado	VARCHAR(12) NOT NULL,
 	PRIMARY KEY (nombre_usuario)
