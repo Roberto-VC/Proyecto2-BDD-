@@ -15,28 +15,25 @@ import psycopg2
 from sympy import false
 import bcrypt
 
-conn = psycopg2.connect("host=localhost dbname=proyecto2 user=postgres password=rwby123")
+conn = psycopg2.connect("host=localhost dbname=proyecto_2 user=postgres password=rwby123")
 cur = conn.cursor()
 
 def loginInfo(usuario, contraseña):
     
-
-    fetchLoginInfo_Query = "SELECT nombre_usuario,contraseña FROM usuario WHERE usuario.nombre_usuario = '{0}' and usuario.contraseña = '{1}'".format(usuario, contraseña)
+    fetchLoginInfo_Query = "SELECT nombre_usuario,contraseña FROM usuario WHERE usuario.nombre_usuario = '{0}'".format(usuario)
     cur.execute(fetchLoginInfo_Query)
     login_records = cur.fetchall()
-    print(login_records)
-    contraseñaSQL = login_records[0][1]
-    print(contraseñaSQL)
-    '''
-    passwd = bytes(contraseña, 'utf-8') 
-    hashed = bcrypt.hashpw(passwd, bcrypt.gensalt(10)) 
-    matched = bcrypt.checkpw(passwd, hashed)
-    '''
-
 
     if not login_records:
+        print("No existe ese usuario")
         return False
-    else:
+    contraseñaSQL = login_records[0][1]
+    contraseña = bytes(contraseña, 'utf-8') 
+    contraseñaSQL = bytes(contraseñaSQL, 'utf-8')
+    if bcrypt.hashpw(contraseña, contraseñaSQL) == contraseñaSQL:
         return True
+    else:
+        print("Esa contraseña no es la correcta...")
+        return False
 
-print(loginInfo('AndresDLR', 'Andres1234'))
+print(loginInfo('junwoolee', 'bts123'))
