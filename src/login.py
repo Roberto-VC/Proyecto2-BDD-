@@ -15,7 +15,11 @@ import psycopg2
 from sympy import false
 import bcrypt
 
+<<<<<<< HEAD
 conn = psycopg2.connect("host=localhost dbname=proyecto_2 user=postgres password=rwby123")
+=======
+conn = psycopg2.connect("host=localhost dbname=proyecto2 user=postgres password=rwby123")
+>>>>>>> ba243838ed20a7223b56a7301a393eb9450ee999
 cur = conn.cursor()
 
 def loginInfo(usuario, contraseña):
