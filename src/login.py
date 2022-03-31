@@ -10,9 +10,7 @@
 #   
 #   Ver 1.0
 ###############################################
-import pandas as pd
 import psycopg2
-from sympy import false
 import bcrypt
 
 conn = psycopg2.connect("host=localhost dbname=proyecto_2 user=postgres password=rwby123")

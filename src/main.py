@@ -1,7 +1,7 @@
 from create_account import *
 from login import *
-from selectprofile import *
 from busqueda_contenido import *
+from perfiles import *
 
 def main():
     run = True
@@ -18,6 +18,8 @@ def main():
             inputcontraseña = input("Ingrese su contraseña: ")
             if loginInfo(inputusuario, inputcontraseña):
                 print("\nSe ha logrado loguear al sistema\n")
+                print("--Menu de selección de perfiles--")
+                perfiles(inputusuario)
             else:
                 print("\nNo se ha logrado loguear al sistema\n")
         elif inputmenuprincipal == "2":
