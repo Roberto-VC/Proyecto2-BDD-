@@ -12,12 +12,13 @@
 ###############################################
 import psycopg2
 import bcrypt
+from datetime import date
 
-conn = psycopg2.connect("host=localhost dbname=proyecto_2 user=postgres password=rwby123")
+conn = psycopg2.connect("host=localhost dbname=proyecto_2 user=postgres password=12345")
 cur = conn.cursor()
 
 def loginInfo(usuario, contraseña):
-    
+
     fetchLoginInfo_Query = "SELECT nombre_usuario,contraseña FROM usuario WHERE usuario.nombre_usuario = '{0}'".format(usuario)
     cur.execute(fetchLoginInfo_Query)
     login_records = cur.fetchall()
@@ -32,5 +33,11 @@ def loginInfo(usuario, contraseña):
         return True
     else:
         print("Esa contraseña no es la correcta...")
+        cur.execute("select id_intento from seguridad")
+        tries =  cur.fetchall()
+        id_tries = len(tries) + 1
+        fecha = date.today()
+        cur.execute("INSERT INTO seguridad (id_intento, fecha, usuario) values (%s, %s, %s)",
+                    (id_tries, fecha, usuario))
+        conn.commit()
         return False
-
