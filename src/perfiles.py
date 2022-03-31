@@ -1,11 +1,11 @@
-from re import A
+
 import psycopg2
-import bcrypt
-
-user = "RVC1"
 
 
-def perfiles(tipo):
+usuario = input("Ingrese su usuario: ")
+
+
+def perfiles(user):
     connection = psycopg2.connect(database="proyecto2", user="postgres", password="videogamesfan10", host="localhost", port=5432)
     cursor = connection.cursor()
     cursor.execute('''SELECT COUNT(*) FROM perfil''')
@@ -18,7 +18,7 @@ def perfiles(tipo):
     result2 = cursor.fetchall()
     print("1. Crear Nuevo Perfil")
     for x in range(perfiles):
-        print(str(x+2) + ". " + result2[0][1])
+        print(str(x+2) + ". " + result2[x][1])
     cursor.execute(f'''SELECT * FROM usuario INNER JOIN subscripcion ON usuario.nombre_usuario = subscripcion.usuario WHERE nombre_usuario = '{user}';''')
     result3 = cursor.fetchall()
     subscription = int(result3[0][6])
@@ -51,7 +51,7 @@ def perfiles(tipo):
  
 
 
-perfiles(1)
+perfiles(usuario)
 
 
 
