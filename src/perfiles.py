@@ -1,12 +1,8 @@
 
 import psycopg2
 
-
-usuario = input("Ingrese su usuario: ")
-
-
 def perfiles(user):
-    connection = psycopg2.connect(database="proyecto2", user="postgres", password="videogamesfan10", host="localhost", port=5432)
+    connection = psycopg2.connect(database="proyecto_2", user="postgres", password="rwby123", host="localhost", port=5432)
     cursor = connection.cursor()
     cursor.execute('''SELECT COUNT(*) FROM perfil''')
     cantidad = cursor.fetchall()
@@ -21,6 +17,7 @@ def perfiles(user):
         print(str(x+2) + ". " + result2[x][1])
     cursor.execute(f'''SELECT * FROM usuario INNER JOIN subscripcion ON usuario.nombre_usuario = subscripcion.usuario WHERE nombre_usuario = '{user}';''')
     result3 = cursor.fetchall()
+    print(result3)
     subscription = int(result3[0][6])
     opcion = int(input("Ingrese su opcion: \n"))
     if opcion == 1:
@@ -48,10 +45,6 @@ def perfiles(user):
     connection.commit()
     connection.close()
 
- 
-
-
-perfiles(usuario)
 
 
 
