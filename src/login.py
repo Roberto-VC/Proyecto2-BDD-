@@ -14,7 +14,7 @@ import psycopg2
 import bcrypt
 from datetime import date
 
-conn = psycopg2.connect("host=localhost dbname=proyecto_2 user=postgres password=12345")
+conn = psycopg2.connect("host=localhost dbname=proyecto_2 user=postgres password=rwby123")
 cur = conn.cursor()
 
 def loginInfo(usuario, contraseña):
