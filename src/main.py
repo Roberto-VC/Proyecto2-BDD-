@@ -70,7 +70,7 @@ botonlogin.place(relx=0.5, rely=0.2, anchor="center")
 botonsignup = tk.Button(entryarea, bg=background, width=20, height=3, text="Sign Up", font=botonesFont)
 botonsignup.place(relx=0.5, rely=0.5, anchor="center")
 
-botonsalir = tk.Button(entryarea, bg=background, width=20, height=3, text="Exit", font=botonesFont, command=window.destroy)
+botonsalir = tk.Button(entryarea, bg=background, width=20, height=3, text="Salir", font=botonesFont, command=window.destroy)
 botonsalir.place(relx=0.5, rely=0.8, anchor="center")
 
 

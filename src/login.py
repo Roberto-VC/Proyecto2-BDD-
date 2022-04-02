@@ -20,8 +20,18 @@ cur = conn.cursor()
 def loginInfo(usuario, contraseña):
 
     fetchLoginInfo_Query = "SELECT nombre_usuario,contraseña FROM usuario WHERE usuario.nombre_usuario = '{0}'".format(usuario)
-    cur.execute(fetchLoginInfo_Query)
+    cur.execute("""
+        SELECT  nombre_usuario,contraseña
+        FROM    usuario
+        WHERE   usuario.nombre_usuario = %(usuario)s
+    """, {
+        'usuario': usuario
+    })
     login_records = cur.fetchall()
+
+    if login_records is None:
+        print("No existe ese usuario")
+        return False
 
     if not login_records:
         print("No existe ese usuario")
@@ -42,4 +52,4 @@ def loginInfo(usuario, contraseña):
         conn.commit()
         return False
 
-loginInfo("junwoolee", "ur3h2uwdh38")
+loginInfo("junwoolee", "bts123")
