@@ -16,8 +16,8 @@ cur = conn.cursor()
 
 def clear_entradas(event, entry):
     entry.delete(0, tk.END)
-    #view.pack_forget()
 
+###Busqueda por Queries###
 def busqueda_actores(busqueda):
     
     cur.execute("""
@@ -45,19 +45,6 @@ def busqueda_actores(busqueda):
     print(search_records)
     return search_records
 
-    """
-    SELECT 	nombre, links
-    FROM	multimedia
-    WHERE	multimedia.id IN(
-        SELECT multimedia_id
-        FROM actor_contenido
-        WHERE actor_contenido.actor_id IN (
-            SELECT id
-            FROM actor
-            WHERE nombre_completo = 'Juanito Perez'
-        )
-    );
-    """
 
 def busqueda_director(busqueda):
     cur.execute("""
@@ -85,20 +72,6 @@ def busqueda_director(busqueda):
     print(search_records)
     return search_records
 
-    """
-    SELECT 	nombre, links
-    FROM	multimedia
-    WHERE	multimedia.id IN(
-        SELECT multimedia_id
-        FROM director_contenido
-        WHERE director_contenido.id IN (
-            SELECT id
-            FROM director
-            WHERE nombre_completo = 'Brian de Palmas'
-        )
-    );
-    """
-
 def busqueda_categoria(busqueda):
     cur.execute("""
     SELECT 	nombre, links
@@ -125,21 +98,6 @@ def busqueda_categoria(busqueda):
     print(search_records)
     return search_records
 
-
-    """
-    SELECT 	nombre, links
-    FROM	multimedia
-    WHERE	multimedia.id IN(
-        SELECT id_contenido
-        FROM genero_contenido
-        WHERE genero_contenido.id_genero IN (
-            SELECT id_genero
-            FROM generos
-            WHERE nombre = 'Acción'
-        )
-    );
-    """
-
 def busqueda_entretenimiento(busqueda):
     cur.execute("""
     SELECT nombre,links
@@ -157,12 +115,6 @@ def busqueda_entretenimiento(busqueda):
 
     print(search_records)
     return search_records
-
-    """
-    SELECT nombre,links
-    FROM multimedia
-    WHERE tipo_contenido = 'Pelicula';
-    """
 
 def busqueda_premios(busqueda):
     cur.execute("""
@@ -190,21 +142,6 @@ def busqueda_premios(busqueda):
     print(search_records)
     return search_records
 
-
-    """
-    SELECT 	nombre, links
-    FROM	multimedia
-    WHERE	multimedia.id IN(
-        SELECT multimedia_id
-        FROM premios_contenido
-        WHERE premios_contenido.id IN (
-            SELECT id_premio
-            FROM premios
-            WHERE premio = 'Sindicato de Productores'
-        )
-    );
-    """
-
 def busqueda_estreno(busqueda):
     cur.execute("""
     SELECT nombre,links
@@ -223,14 +160,6 @@ def busqueda_estreno(busqueda):
     print(search_records)
     return search_records
 
-
-    """
-    SELECT nombre,links
-    FROM multimedia
-    WHERE EXTRACT(YEAR FROM fecha_estreno) = '1996';
-    """
-
-
 def busqueda_nombre(busqueda):
     cur.execute("""
     SELECT nombre,links
@@ -248,12 +177,10 @@ def busqueda_nombre(busqueda):
 
     print(search_records)
     return search_records
-    """
-    SELECT nombre,links
-    FROM multimedia
-    WHERE nombre = 'Mision Imposible';
-    """
+###Fin de Busqueda por Queries###
 
+
+#Busqueda de contenido por medio de queries
 def busqueda(searchWindow, inputusuario, busqueda):
 
     listaBusqueda = []
@@ -291,7 +218,8 @@ def busqueda(searchWindow, inputusuario, busqueda):
             labelTitulo.grid(row=count, column=0, padx=100, pady=5)
             labelLink.grid(row=count, column=1, padx=100)
             count = count + 1
-        
+
+#Visualizacion de contenido por medio de la libreria de VLC media player y pafy     
 def visualizar(link):
     print(link)
     url=link
@@ -317,7 +245,7 @@ def visualizar(link):
             print("Supposed to exit here")
             return False
             
-
+#Interfaz de usuario de busqueda de contenido y visualizacion
 def UI_busqueda():
     background = '#ffe4e1'
     foreground = '#79a1e0'
@@ -378,8 +306,6 @@ def UI_busqueda():
     historial.place(relx=0.45, rely=0.4)
     recomendaciones.place(relx=0.6, rely=0.4)
     volver.place(relx=0.15, rely=0.05)
-
-
 
     #Configuraciones extra de ventana
     searchWindow.configure(bg=background)
