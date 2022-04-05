@@ -1,5 +1,3 @@
-from cProfile import label
-from matplotlib import container
 import psycopg2
 import tkinter as tk
 from tkinter import OptionMenu, Scrollbar, StringVar, messagebox
@@ -8,6 +6,7 @@ import vlc
 import pafy
 import time
 import keyboard
+from registro_historial import *
 
 from sympy import expand, false
 
@@ -21,7 +20,7 @@ def clear_entradas(event, entry):
 def busqueda_actores(busqueda):
     
     cur.execute("""
-        SELECT 	nombre, links
+        SELECT 	nombre, links, id
         FROM	multimedia
         WHERE	multimedia.id IN(
             SELECT multimedia_id
@@ -48,7 +47,7 @@ def busqueda_actores(busqueda):
 
 def busqueda_director(busqueda):
     cur.execute("""
-    SELECT 	nombre, links
+    SELECT 	nombre, links, id
     FROM	multimedia
     WHERE	multimedia.id IN(
         SELECT multimedia_id
@@ -74,7 +73,7 @@ def busqueda_director(busqueda):
 
 def busqueda_categoria(busqueda):
     cur.execute("""
-    SELECT 	nombre, links
+    SELECT 	nombre, links, id
     FROM	multimedia
     WHERE	multimedia.id IN(
         SELECT id_contenido
@@ -100,7 +99,7 @@ def busqueda_categoria(busqueda):
 
 def busqueda_entretenimiento(busqueda):
     cur.execute("""
-    SELECT nombre,links
+    SELECT nombre,links, id
     FROM multimedia
     WHERE tipo_contenido = %(busqueda)s;
     """, {
@@ -118,7 +117,7 @@ def busqueda_entretenimiento(busqueda):
 
 def busqueda_premios(busqueda):
     cur.execute("""
-    SELECT 	nombre, links
+    SELECT 	nombre, links, id
     FROM	multimedia
     WHERE	multimedia.id IN(
         SELECT multimedia_id
@@ -144,7 +143,7 @@ def busqueda_premios(busqueda):
 
 def busqueda_estreno(busqueda):
     cur.execute("""
-    SELECT nombre,links
+    SELECT nombre,links, id
     FROM multimedia
     WHERE EXTRACT(YEAR FROM fecha_estreno) = %(busqueda)s;
     """, {
@@ -162,7 +161,7 @@ def busqueda_estreno(busqueda):
 
 def busqueda_nombre(busqueda):
     cur.execute("""
-    SELECT nombre,links
+    SELECT nombre,links, id
     FROM multimedia
     WHERE nombre = %(busqueda)s;
     """, {
@@ -181,7 +180,7 @@ def busqueda_nombre(busqueda):
 
 
 #Busqueda de contenido por medio de queries
-def busqueda(searchWindow, inputusuario, busqueda):
+def busqueda(searchWindow, inputusuario, busqueda, id_perfil):
 
     listaBusqueda = []
 
@@ -214,14 +213,15 @@ def busqueda(searchWindow, inputusuario, busqueda):
 
         for item in listaBusqueda:
             labelTitulo = tk.Label(searchWindow, text=item[0], bg='#ffe4e1')
-            labelLink = tk.Button(searchWindow, text="Ver", bg='#ffe4e1', command=lambda x=item[1]:  visualizar(x)) #Temporal hasta reemplazar por boton
+            labelLink = tk.Button(searchWindow, text="Ver", bg='#ffe4e1', command=lambda x=item[1], y=item[2]:  visualizar(x, id_perfil, y)) #Temporal hasta reemplazar por boton
             labelTitulo.grid(row=count, column=0, padx=100, pady=5)
             labelLink.grid(row=count, column=1, padx=100)
             count = count + 1
 
 #Visualizacion de contenido por medio de la libreria de VLC media player y pafy     
-def visualizar(link):
+def visualizar(link, id_perfil, id_contenido):
     print(link)
+    registrar_historial(id_contenido, "2002")
     url=link
     video = pafy.new(url)
     best = video.getbest()
@@ -246,7 +246,7 @@ def visualizar(link):
             return False
             
 #Interfaz de usuario de busqueda de contenido y visualizacion
-def UI_busqueda():
+def UI_busqueda(id_perfil):
     background = '#ffe4e1'
     foreground = '#79a1e0'
     #pastWindow.destroy()
@@ -295,7 +295,7 @@ def UI_busqueda():
     opcionesMenu = OptionMenu(searchWindow, clicked, *opcionesBusqueda)
     opcionesMenu.configure(bg=background)
     opcionesMenu.place(relx=0.4, rely=0.35, anchor="center")
-    buscar = tk.Button(searchWindow, bg=background, width=8, height=3, text="Buscar", font=searchFont, command=lambda: busqueda(scrollable_frame, clicked.get(), inputBusqueda.get()))
+    buscar = tk.Button(searchWindow, bg=background, width=8, height=3, text="Buscar", font=searchFont, command=lambda: busqueda(scrollable_frame, clicked.get(), inputBusqueda.get(), id_perfil))
     buscar.place(relx = 0.6, rely=0.35, anchor="center")
 
     favoritos = tk.Button(searchWindow, bg=background, width=15, height=3, text="Favoritos", font=searchFont)
@@ -313,5 +313,5 @@ def UI_busqueda():
     searchWindow.resizable(False,False)
     searchWindow.mainloop()
 
-UI_busqueda()
+UI_busqueda("junwoolee")
 
