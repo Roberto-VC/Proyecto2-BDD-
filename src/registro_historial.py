@@ -81,6 +81,9 @@ def historial(scrollable_frame, id_perfil):
 
         count=0
         if listaHistorial:
+            for widget in scrollable_frame.winfo_children():
+                widget.destroy()
+
             for item in listaHistorial:
                 labelTitulo = tk.Label(scrollable_frame, text=item[0], bg='#ffe4e1')
                 labelFecha = tk.Label(scrollable_frame, text=item[1], bg='#ffe4e1')
@@ -129,7 +132,9 @@ def UI_historial(id_perfil):
 
 
     volver = tk.Button(historialWindow, bg=background, width=8, height=3, text="Volver", font=historialFont)
+    refresh = tk.Button(historialWindow, bg=background, width=8, height=3, text="Refresh", font=historialFont, command=historial(scrollable_frame, id_perfil))
     volver.place(relx= 0.05, rely=0.01)
+    refresh.place(relx=0.2, rely=0.01)
 
     #Configuraciones extra de ventana
     historialWindow.configure(bg=foreground)
