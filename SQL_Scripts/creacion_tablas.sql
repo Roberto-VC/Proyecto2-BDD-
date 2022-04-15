@@ -36,7 +36,7 @@ CREATE TABLE multimedia (
 
 CREATE TABLE historial (
 	id_contenido VARCHAR(32) NOT NULL,
-	fecha_visualizacion DATE NOT NULL,
+	fecha_visualizacion TIMESTAMP NOT NULL,
 	capitulo int,
 	id_perfil VARCHAR(32) NOT NULL,
 	FOREIGN KEY(id_contenido) REFERENCES multimedia(id) ON DELETE CASCADE,

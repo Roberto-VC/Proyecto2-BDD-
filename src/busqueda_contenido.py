@@ -29,7 +29,6 @@ def busqueda_estreno(busqueda):
         print("No se ha encontrado ningun resultado")
         return False
 
-    print(search_records)
     return search_records
 
 def busquedaGeneral(busqueda):
@@ -95,7 +94,6 @@ def busqueda(scrollable_frame, busqueda, id_perfil):
         listaBusqueda = []
 
         if busqueda == "":
-            print("No se ha ingresado ningun valor")
             labelresultados = tk.Label(scrollable_frame, text="No se ha encontrado ningun resultado :(", bg='#ffe4e1')
             labelresultados.grid(row=0, column=0, padx=200, pady=5)
 
@@ -125,11 +123,9 @@ def busqueda(scrollable_frame, busqueda, id_perfil):
                     labelLink.grid(row=count, column=1, padx=100)
                     count = count + 1
             else:
-                print("No se encontro ningun resultado :(")
                 labelresultados = tk.Label(scrollable_frame, text="No se ha encontrado ningun resultado :(", bg='#ffe4e1')
                 labelresultados.grid(row=0, column=0, padx=200, pady=5)
     except:
-        print("No se encontro ningun resultado :(")
         labelresultados = tk.Label(scrollable_frame, text="No se ha encontrado ningun resultado :(", bg='#ffe4e1')
         labelresultados.grid(row=0, column=0, padx=200, pady=5)
         conn.rollback()
@@ -138,7 +134,6 @@ def busqueda(scrollable_frame, busqueda, id_perfil):
 #Visualizacion de contenido por medio de la libreria de VLC media player y pafy     
 def visualizar(link, id_perfil, id_contenido):
     print(link)
-    registrar_historial(id_contenido, id_perfil) 
     url=link
     video = pafy.new(url)
     best = video.getbest()
@@ -150,16 +145,28 @@ def visualizar(link, id_perfil, id_contenido):
     player.set_media(Media)
     playing = True
     player.play()
+    registrar_historial(id_contenido, id_perfil) 
+    tiempo = 5
     while True:
-        if keyboard.read_key() == "p" and playing == True:
+        if playing:
+            time.sleep(tiempo - time.time() % tiempo) #Se muestra un anuncio cada X tiempo (segundos)
             player.pause()
-            playing = False
-        elif keyboard.read_key() == "p" and playing == False:
+            messagebox.showinfo("Anuncio!", f"Id anuncio X\nAnuncio X\n")
             player.play()
-            playing == True
+            playing=True
+        if keyboard.read_key() == "p":
+            player.pause()
+            playing=False
+            print("Pause")
+            time.sleep(0.1)
+        elif keyboard.read_key() == "r":
+            player.play()
+            playing=True
+            print("Play")
         elif keyboard.read_key() == "e":
             player.stop()
             return False
+
             
 #Interfaz de usuario de busqueda de contenido y visualizacion
 def UI_busqueda(id_perfil):

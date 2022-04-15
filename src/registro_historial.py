@@ -1,18 +1,19 @@
 import psycopg2
-from datetime import date
+from datetime import date, datetime
 import tkinter as tk
 from tkinter import OptionMenu, Scrollbar, StringVar, messagebox
 import tkinter.font as tkFont
 import vlc
 import pafy
-import time
 import keyboard
+import time
 
 conn = psycopg2.connect("host=localhost dbname=proyecto_2 user=postgres password=rwby123")
 cur = conn.cursor()
 
 def registrar_historial(id_contenido, id_perfil):
-    fecha_visualizacion = date.today()
+    fecha_visualizacion = datetime.now()
+    print(fecha_visualizacion)
     cur.execute("""
         INSERT INTO historial (
 	        id_contenido, fecha_visualizacion, capitulo, id_perfil
@@ -27,32 +28,6 @@ def registrar_historial(id_contenido, id_perfil):
     })
 
     conn.commit()
-
-
-def visualizar(link, id_perfil, id_contenido):
-    print(link)
-    registrar_historial(id_contenido, id_perfil) 
-    url=link
-    video = pafy.new(url)
-    best = video.getbest()
-    playurl = best.url
-    Instance = vlc.Instance()
-    player = Instance.media_player_new()
-    Media = Instance.media_new(playurl)
-    Media.get_mrl()
-    player.set_media(Media)
-    playing = True
-    player.play()
-    while True:
-        if keyboard.read_key() == "p" and playing == True:
-            player.pause()
-            playing = False
-        elif keyboard.read_key() == "p" and playing == False:
-            player.play()
-            playing == True
-        elif keyboard.read_key() == "e":
-            player.stop()
-            return False
 
 def buscar_historial(id_perfil):
     cur.execute("""
@@ -90,7 +65,7 @@ def historial(scrollable_frame, id_perfil):
                 labelVisualizar = tk.Button(scrollable_frame, text="Ver", bg='#ffe4e1', command=lambda x=item[3], y=item[2]: visualizar(x, id_perfil, y))
 
                 labelTitulo.grid(row=count, column=0, padx=25, pady=5)
-                labelFecha.grid(row=count, column=1, padx=25)
+                labelFecha.grid(row=count, column=1, padx=15)
                 labelVisualizar.grid(row=count, column=2, padx=25)
                 count = count + 1
         else:
@@ -98,6 +73,42 @@ def historial(scrollable_frame, id_perfil):
             labelresultados.grid(row=0, column=0, padx=100, pady=5)
     except:
         print("No se encontro ningun resultado :(")
+
+def visualizar(link, id_perfil, id_contenido):
+    print(link)
+    url=link
+    video = pafy.new(url)
+    best = video.getbest()
+    playurl = best.url
+    Instance = vlc.Instance()
+    player = Instance.media_player_new()
+    Media = Instance.media_new(playurl)
+    Media.get_mrl()
+    player.set_media(Media)
+    playing = True
+    player.play()
+    registrar_historial(id_contenido, id_perfil) 
+    tiempo = 5
+    time.sleep(1)
+    while True:
+        if playing:
+            time.sleep(tiempo - time.time() % tiempo) #Se muestra un anuncio cada X tiempo (segundos)
+            player.pause()
+            messagebox.showinfo("Anuncio!", f"Id anuncio X\nAnuncio X\n")
+            player.play()
+        if keyboard.read_key() == "p":
+            player.pause()
+            playing=False
+            print("Pause")
+            time.sleep(0.1)
+        elif keyboard.read_key() == "r":
+            player.play()
+            playing=True
+            print("Play")
+        elif keyboard.read_key() == "e":
+            player.stop()
+            return False
+
 
 def UI_historial(id_perfil):
     background = '#ffe4e1'
