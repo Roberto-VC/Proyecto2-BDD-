@@ -148,7 +148,7 @@ def select(X):
     result4 = cursor.fetchall()
     print(f"Contenido Visto:\n {result4}")
     window.destroy()
-    UI_busqueda(result2[X][2])
+    UI_busqueda(result2[X][2], result3[0][6])
 
 
 

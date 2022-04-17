@@ -89,7 +89,7 @@ def busquedaGeneral(busqueda):
 
 
 #Busqueda de contenido por medio de queries
-def busqueda(scrollable_frame, busqueda, id_perfil):
+def busqueda(scrollable_frame, busqueda, id_perfil, subscripcion):
     try:
         listaBusqueda = []
 
@@ -105,7 +105,7 @@ def busqueda(scrollable_frame, busqueda, id_perfil):
 
             for item in listaBusqueda:
                 labelTitulo = tk.Label(scrollable_frame, text=item[0], bg='#ffe4e1')
-                labelLink = tk.Button(scrollable_frame, text="Ver", bg='#ffe4e1', command=lambda x=item[1], y=item[2]:  visualizar(x, id_perfil, y)) #Temporal hasta reemplazar por boton
+                labelLink = tk.Button(scrollable_frame, text="Ver", bg='#ffe4e1', command=lambda x=item[1], y=item[2]:  visualizar(x, id_perfil, y, subscripcion)) #Temporal hasta reemplazar por boton
                 labelTitulo.grid(row=count, column=0, padx=100, pady=5)
                 labelLink.grid(row=count, column=1, padx=100)
                 count = count + 1
@@ -118,7 +118,7 @@ def busqueda(scrollable_frame, busqueda, id_perfil):
 
                 for item in listaBusqueda:
                     labelTitulo = tk.Label(scrollable_frame, text=item[0], bg='#ffe4e1')
-                    labelLink = tk.Button(scrollable_frame, text="Ver", bg='#ffe4e1', command=lambda x=item[1], y=item[2]:  visualizar(x, id_perfil, y)) #Temporal hasta reemplazar por boton
+                    labelLink = tk.Button(scrollable_frame, text="Ver", bg='#ffe4e1', command=lambda x=item[1], y=item[2]:  visualizar(x, id_perfil, y, subscripcion)) #Temporal hasta reemplazar por boton
                     labelTitulo.grid(row=count, column=0, padx=100, pady=5)
                     labelLink.grid(row=count, column=1, padx=100)
                     count = count + 1
@@ -132,7 +132,7 @@ def busqueda(scrollable_frame, busqueda, id_perfil):
 
 
 #Visualizacion de contenido por medio de la libreria de VLC media player y pafy     
-def visualizar(link, id_perfil, id_contenido):
+def visualizar(link, id_perfil, id_contenido, subscripcion):
     print(link)
     url=link
     video = pafy.new(url)
@@ -148,7 +148,7 @@ def visualizar(link, id_perfil, id_contenido):
     registrar_historial(id_contenido, id_perfil) 
     tiempo = 5
     while True:
-        if playing:
+        if playing and int(subscripcion) == 1:
             time.sleep(tiempo - time.time() % tiempo) #Se muestra un anuncio cada X tiempo (segundos)
             player.pause()
             messagebox.showinfo("Anuncio!", f"Id anuncio X\nAnuncio X\n")
@@ -169,7 +169,7 @@ def visualizar(link, id_perfil, id_contenido):
 
             
 #Interfaz de usuario de busqueda de contenido y visualizacion
-def UI_busqueda(id_perfil):
+def UI_busqueda(id_perfil, subscripcion):
     background = '#ffe4e1'
     foreground = '#79a1e0'
     #pastWindow.destroy()
@@ -211,7 +211,7 @@ def UI_busqueda(id_perfil):
     inputBusqueda.bind("<Button-1>", lambda event: clear_entradas(event, inputBusqueda))
     inputBusqueda.place(relx=0.5, rely=0.28, anchor="center")
 
-    buscar = tk.Button(searchWindow, bg=background, width=8, height=3, text="Buscar", font=searchFont, command=lambda: busqueda(scrollable_frame, inputBusqueda.get(), id_perfil))
+    buscar = tk.Button(searchWindow, bg=background, width=8, height=3, text="Buscar", font=searchFont, command=lambda: busqueda(scrollable_frame, inputBusqueda.get(), id_perfil, subscripcion))
     buscar.place(relx = 0.6, rely=0.35, anchor="center")
 
     favoritos = tk.Button(searchWindow, bg=background, width=15, height=3, text="Favoritos", font=searchFont)

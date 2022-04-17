@@ -1,4 +1,3 @@
-#from create_account import *
 from login import *
 from perfiles import *
 import tkinter as tk
