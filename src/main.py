@@ -2,12 +2,82 @@
 from login import *
 from perfiles import *
 import tkinter as tk
-from tkinter import messagebox
+from tkinter import OptionMenu, Scrollbar, StringVar, messagebox
 import tkinter.font as tkFont
 
 
 background = '#ffe4e1'
 foreground = '#79a1e0'
+disallowedchars="!#$%&/()='-|;"
+
+def UI_signup(botonlogin, botonsignup, botonsalir, entryarea):
+    botonlogin.place_forget()
+    botonsignup.place_forget()
+    botonsalir.place_forget()
+    SignupFont = tkFont.Font(family="@MS UI Gothic", size=12, weight="bold" )
+    #Area de input de informacion
+    userText = Label(entryarea, text = "Usuario", bg = foreground, font = SignupFont)
+    userText.place(relx=0.1, rely=0.1, anchor="w")
+    userInput = tk.Entry(entryarea, width=30)
+    userInput.place(relx=0.4, rely=0.1, anchor="w")
+
+    mailText = Label(entryarea, text = "Correo", bg = foreground, font = SignupFont)
+    mailText.place(relx=0.1, rely=0.3, anchor="w")
+    mailInput = tk.Entry(entryarea, width=30)
+    mailInput.place(relx=0.4, rely=0.3, anchor="w")
+
+    passText = Label(entryarea, text = "Contrasena", bg = foreground, font = SignupFont)
+    passText.place(relx=0.1, rely=0.5, anchor="w")
+    passInput = tk.Entry(entryarea, width=30)
+    passInput.place(relx=0.4, rely=0.5, anchor="w")
+
+    typeText = Label(entryarea, text = "Tipo de cuenta", bg = foreground, font = SignupFont)
+    typeText.place(relx=0.1, rely=0.7, anchor="w")
+    clicked = StringVar()
+    clicked.set("Basica")
+    typeMenu = OptionMenu(entryarea, clicked, "Basica", "Estandar", "Avanzada")
+    typeMenu.place(relx=0.45, rely=0.7, anchor="w")
+
+    buttonSignup = tk.Button(entryarea, bg=background, width=10, height=2, text="Crear cuenta", font=SignupFont, command=lambda: signup(username,password,email,accountType))
+    buttonSignup.place(relx=0.1, rely=0.9, anchor="w")
+
+    buttonReturn = tk.Button(entryarea, bg=background, width=10, height=2, text="Volver", font=SignupFont, command=lambda: renderStartFromSignup())
+    buttonReturn.place(relx=0.9, rely=0.9, anchor="e")
+
+    username = userInput.get()
+    email = mailInput.get()
+    password = passInput.get()
+    accountType = clicked.get()
+
+def signup(username, password, email, accountType):
+    #Hashing del password
+    state="Activo"
+    pass_byte = bytes(password, 'utf-8')
+    hashed = bcrypt.hashpw(pass_byte, bcrypt.gensalt(10))
+    hashed = hashed.decode("utf-8")
+    
+
+    
+    if(len(username) == 0 or len(email)== 0 or len(password) == 0 or set(username) & set(disallowedchars) or set(email) & set(disallowedchars) or set(password) & set(disallowedchars)):
+        tk.messagebox.showinfo("Error de datos", "Datos ingresados invalidos")
+    else:
+        try:
+            conn = psycopg2.connect("host=localhost dbname=proyecto_2 user=postgres password=rwby123")
+            cur = conn.cursor()
+            cur.execute("INSERT INTO usuario (nombre_usuario, contraseña, correo, estado) values (%s, %s, %s, %s)",
+                    (username, hashed, email, state))
+            
+            cur.execute("INSERT INTO subscripcion (usuario, estado, tipo) values (%s, %s, %s)",
+                            (username, state, accountType))
+        
+            tk.messagebox.showinfo("Cuenta creada", "Cuenta Creada")
+        
+        except Exception as E:
+            tk.messagebox.showinfo("Error", "El usuario ya se encuentra registrado, intente de nuevo")
+            print(E)
+        
+        conn.commit() #Commit de las tablas a base de datos SQL
+        conn.close()  #Cerrar la conexion
 
 def renderLogin(botonlogin, botonsignup, botonsalir, inputUsuario, inputContra, volverMenu, loguearse, entryarea):
     botonlogin.place_forget()
@@ -33,6 +103,10 @@ def renderStart(inputUsuario, inputContra, volverMenu, loguearse, botonlogin, bo
     botonsignup.place(relx=0.5, rely=0.5, anchor="center")
     botonsalir.place(relx=0.5, rely=0.8, anchor="center")
     entryarea.configure(width=350, height=300)
+
+def renderStartFromSignup():
+    print("Hello mom")
+
 
 def clear_entradas(inputContra, entry):
     entry.delete(0, tk.END)
@@ -72,7 +146,7 @@ def mainScreen():
     botonlogin = tk.Button(master=entryarea, bg=background, width=20, height=3, text="Login", font=botonesFont, command=lambda: renderLogin(botonlogin, botonsignup, botonsalir, inputUsuario, inputContra, volverMenu, loguearse, entryarea))
     botonlogin.place(relx=0.5, rely=0.2, anchor="center")
 
-    botonsignup = tk.Button(master=entryarea, bg=background, width=20, height=3, text="Sign Up", font=botonesFont)
+    botonsignup = tk.Button(master=entryarea, bg=background, width=20, height=3, text="Sign Up", font=botonesFont, command=lambda: UI_signup(botonlogin, botonsignup, botonsalir, entryarea))
     botonsignup.place(relx=0.5, rely=0.5, anchor="center")
 
     botonsalir = tk.Button(entryarea, bg=background, width=20, height=3, text="Salir", font=botonesFont, command=window.destroy)

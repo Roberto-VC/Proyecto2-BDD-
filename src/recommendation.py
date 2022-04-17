@@ -2,7 +2,7 @@ import psycopg2
 
 
 def recc(id_perfil):
-    conn = psycopg2.connect("host=localhost dbname=proyecto_2 user=postgres password=12345")
+    conn = psycopg2.connect("host=localhost dbname=proyecto_2 user=postgres password=rwby123")
     cur = conn.cursor()
     cur.execute("""
         SELECT  generos.id_genero, COUNT(generos.id_genero) 
@@ -49,5 +49,4 @@ def recc(id_perfil):
     
     
     
-recc("p01")
-
+recc("6")
