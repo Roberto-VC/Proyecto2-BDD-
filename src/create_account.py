@@ -5,6 +5,7 @@ from tkinter import *
 import tkinter.font as tkFont
 from tkinter import OptionMenu, Scrollbar, StringVar, messagebox
 import re
+from datetime import date
 
 disallowedchars="!#$%&/()='-|;"
 background = '#ffe4e1'
@@ -17,6 +18,8 @@ def UI_signup(clicked):
     password = passInput.get()
     accountType = clicked.get()
     state = "activo"
+    fecha = date.today()
+    today_date = fecha.strftime("%Y-%m-%d")
     
     #Hashing del password
     pass_byte = bytes(password, 'utf-8')
@@ -29,19 +32,18 @@ def UI_signup(clicked):
         tk.messagebox.showinfo("Error de datos", "Datos ingresados invalidos")
     else:
         try:
-            conn = psycopg2.connect("host=localhost dbname=proyecto_2 user=postgres password=rwby123")
+            conn = psycopg2.connect("host=localhost dbname=proyecto_2 user=postgres password=12345")
             cur = conn.cursor()
             cur.execute("INSERT INTO usuario (nombre_usuario, contraseña, correo, estado) values (%s, %s, %s, %s)",
                     (username, hashed, email, state))
             
-            cur.execute("INSERT INTO subscripcion (usuario, estado, tipo) values (%s, %s, %s)",
-                            (username, state, accountType))
+            cur.execute("INSERT INTO subscripcion (usuario, estado, tipo,fecha_inicio) values (%s, %s, %s, %s)",
+                            (username, state, accountType, today_date))
         
             tk.messagebox.showinfo("Cuenta creada", "Cuenta Creada")
         
-        except Exception as E:
+        except Exception:
             tk.messagebox.showinfo("Error", "El usuario ya se encuentra registrado, intente de nuevo")
-            print(E)
         
         conn.commit() #Commit de las tablas a base de datos SQL
         conn.close()  #Cerrar la conexion
@@ -98,14 +100,3 @@ window.configure(bg=background)
 window.geometry("900x500")
 window.resizable(False,False)
 window.mainloop()
-
-
-
-
-
-
-
-
-
-  
-
