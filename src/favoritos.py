@@ -3,13 +3,29 @@ from datetime import date
 import tkinter as tk
 from tkinter import OptionMenu, Scrollbar, StringVar, messagebox
 import tkinter.font as tkFont
-
+import pafy
+import vlc
+import keyboard
 import time
 
-conn = psycopg2.connect("host=localhost dbname=proyecto2 user=postgres password=videogamesfan10")
+conn = psycopg2.connect("host=localhost dbname=proyecto_2 user=postgres password=rwby123")
 cur = conn.cursor()
 
+def registrar_favs(id_contenido, id_perfil):
+    cur.execute("""
+        INSERT INTO favoritos (
+	        perfil_id, contenido_id, estado
+        )
+        VALUES 
+            (%(perfil_id)s, %(contenido_id)s, %(estado)s)
 
+    """, {
+        'contenido_id': id_contenido,
+        'perfil_id':id_perfil,
+        'estado': "Visto"
+    })
+
+    conn.commit()
 
 def visualizar(link, id_perfil, id_contenido):
     print(link)
@@ -37,10 +53,10 @@ def visualizar(link, id_perfil, id_contenido):
 
 def buscar_favorito(id_perfil):
     cur.execute("""
-        SELECT 	nombre, id, links
-        FROM	favoritos
-        JOIN	multimedia ON  favoritos.contenido_id = multimedia.id
-        WHERE	id = 'AAA'
+        SELECT 	multimedia.nombre, multimedia.id, multimedia.links
+        FROM	multimedia
+        JOIN	favoritos ON  favoritos.contenido_id = multimedia.id
+        WHERE	favoritos.perfil_id = %(id_perfil)s
     """, {
         'id_perfil': id_perfil
     })
@@ -104,18 +120,18 @@ def UI_favorito(id_perfil):
         )
     )
 
-    favorito.create_window((0,0), window=scrollable_frame, anchor="nw")
-    favorito.configure(yscrollcommand=scrollbar.set)
+    resultadosfavorito.create_window((0,0), window=scrollable_frame, anchor="nw")
+    resultadosfavorito.configure(yscrollcommand=scrollbar.set)
 
-    favorito.place(relx=0.5, rely=0.5, anchor="center")
-    favorito.pack(side="left", fill="both", expand=True)
+    containerfavorito.place(relx=0.5, rely=0.5, anchor="center")
+    resultadosfavorito.pack(side="left", fill="both", expand=True)
     scrollbar.pack(side="right", fill="y")
 
     favorito(scrollable_frame, id_perfil)
 
 
-    volver = tk.Button(favoritoWindow, bg=background, width=8, height=3, text="Volver", font=favorito)
-    refresh = tk.Button(favorito, bg=background, width=8, height=3, text="Refresh", font=favorito, command=favorito(scrollable_frame, id_perfil))
+    volver = tk.Button(favoritoWindow, bg=background, width=5, height=1, text="Volver", font=favorito, command= lambda: favoritoWindow.destroy())
+    refresh = tk.Button(favoritoWindow, bg=background, width=5, height=1, text="Refresh", font=favorito, command=favorito(scrollable_frame, id_perfil))
     volver.place(relx= 0.05, rely=0.01)
     refresh.place(relx=0.2, rely=0.01)
 
@@ -126,4 +142,4 @@ def UI_favorito(id_perfil):
     favoritoWindow.mainloop()
 
 
-UI_favorito('AAA')
+

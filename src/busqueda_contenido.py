@@ -6,6 +6,7 @@ import vlc
 import pafy
 import time
 import keyboard
+from favoritos import UI_favorito, registrar_favs
 from registro_historial import *
 
 conn = psycopg2.connect("host=localhost dbname=proyecto_2 user=postgres password=rwby123")
@@ -105,9 +106,11 @@ def busqueda(scrollable_frame, busqueda, id_perfil, subscripcion):
 
             for item in listaBusqueda:
                 labelTitulo = tk.Label(scrollable_frame, text=item[0], bg='#ffe4e1')
-                labelLink = tk.Button(scrollable_frame, text="Ver", bg='#ffe4e1', command=lambda x=item[1], y=item[2]:  visualizar(x, id_perfil, y, subscripcion)) #Temporal hasta reemplazar por boton
+                labelLink = tk.Button(scrollable_frame, text="Ver", bg='#ffe4e1', command=lambda x=item[1], y=item[2]:  visualizar(x, id_perfil, y, subscripcion))
+                labelFav = tk.Button(scrollable_frame, text="Fav", bg='#ffe4e1', command=lambda y=item[2]:  registrar_favs(y, id_perfil))
                 labelTitulo.grid(row=count, column=0, padx=100, pady=5)
-                labelLink.grid(row=count, column=1, padx=100)
+                labelLink.grid(row=count, column=1, padx=50)
+                labelFav.grid(row=count, column=2)
                 count = count + 1
 
         else:
@@ -118,9 +121,11 @@ def busqueda(scrollable_frame, busqueda, id_perfil, subscripcion):
 
                 for item in listaBusqueda:
                     labelTitulo = tk.Label(scrollable_frame, text=item[0], bg='#ffe4e1')
-                    labelLink = tk.Button(scrollable_frame, text="Ver", bg='#ffe4e1', command=lambda x=item[1], y=item[2]:  visualizar(x, id_perfil, y, subscripcion)) #Temporal hasta reemplazar por boton
+                    labelLink = tk.Button(scrollable_frame, text="Ver", bg='#ffe4e1', command=lambda x=item[1], y=item[2]:  visualizar(x, id_perfil, y, subscripcion))
+                    labelFav = tk.Button(scrollable_frame, text="Fav", bg='#ffe4e1', command=lambda y=item[2]:  registrar_favs(y, id_perfil))
                     labelTitulo.grid(row=count, column=0, padx=100, pady=5)
-                    labelLink.grid(row=count, column=1, padx=100)
+                    labelLink.grid(row=count, column=1, padx=50)
+                    labelFav.grid(row=count, column=2)
                     count = count + 1
             else:
                 labelresultados = tk.Label(scrollable_frame, text="No se ha encontrado ningun resultado :(", bg='#ffe4e1')
@@ -214,7 +219,7 @@ def UI_busqueda(id_perfil, subscripcion):
     buscar = tk.Button(searchWindow, bg=background, width=8, height=3, text="Buscar", font=searchFont, command=lambda: busqueda(scrollable_frame, inputBusqueda.get(), id_perfil, subscripcion))
     buscar.place(relx = 0.6, rely=0.35, anchor="center")
 
-    favoritos = tk.Button(searchWindow, bg=background, width=15, height=3, text="Favoritos", font=searchFont)
+    favoritos = tk.Button(searchWindow, bg=background, width=15, height=3, text="Favoritos", font=searchFont, command=lambda: UI_favorito(id_perfil))
     historial = tk.Button(searchWindow, bg=background, width=15, height=3, text="Historial", font=searchFont, command=lambda: UI_historial(id_perfil))
     recomendaciones = tk.Button(searchWindow, bg=background, width=15, height=3, text="Recomendaciones", font=searchFont)
     volver = tk.Button(searchWindow, bg=background, width=8, height=3, text="Cerrar", font=searchFont, command= lambda: searchWindow.destroy())
@@ -229,4 +234,4 @@ def UI_busqueda(id_perfil, subscripcion):
     searchWindow.resizable(False,False)
     searchWindow.mainloop()
 
-#UI_busqueda("6", "2")
+UI_busqueda("6", "2")
