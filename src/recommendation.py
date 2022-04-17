@@ -1,7 +1,7 @@
 import psycopg2
 
 
-def recc():
+def recc(id_perfil):
     conn = psycopg2.connect("host=localhost dbname=proyecto_2 user=postgres password=12345")
     cur = conn.cursor()
     cur.execute("""
@@ -11,34 +11,43 @@ def recc():
         JOIN    multimedia ON multimedia.id = genero_contenido.id_contenido
         JOIN    historial ON historial.id_contenido = multimedia.id
         JOIN    perfil  ON  perfil.id = historial.id_perfil
-        WHERE   perfil.id = historial.id_perfil
+        WHERE   %(id_perfil)s = historial.id_perfil
         AND     historial.id_contenido = multimedia.id
         GROUP BY    generos.id_genero
         ORDER BY    COUNT(generos.id_genero) DESC
-        """)
+        """, {
+            'id_perfil': id_perfil
+        })
 
     search_records = cur.fetchall()
     
-    results = []
+    
+    movie_id = []
     
     for i in search_records:
         cur.execute("""
-            SELECT  multimedia.nombre
+            SELECT  multimedia.id, multimedia.links
             FROM    multimedia
             JOIN    genero_contenido ON genero_contenido.id_contenido = multimedia.id
             WHERE   id_genero = %(genre)s
+            LIMIT 10
         """, {
             'genre': i[0]
         })
         
-        results_temp = cur.fetchall()
-        for k in results_temp:
-            results.append(k[0])
+        
+        id_link = cur.fetchall()
+        for k in id_link:
+            movie_id.append(k[0])
     
-    for i in results:
+    for i in movie_id:
         print(i)
+        
+    #id_link -> array con array de id de pelicula y link
+    #movie_id -> lista de id de peliculas
         
     
     
     
-recc()
+recc("p01")
+
