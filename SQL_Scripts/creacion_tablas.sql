@@ -77,7 +77,7 @@ CREATE TABLE actor (
 );
 
 CREATE TABLE actor_contenido (
-		multimedia_id VARCHAR(32) NOT NULL,
+	multimedia_id VARCHAR(32) NOT NULL,
 	actor_id VARCHAR(32) NOT NULL,
 	FOREIGN KEY (multimedia_id) REFERENCES multimedia(id) ON DELETE CASCADE,
 	FOREIGN KEY (actor_id) REFERENCES actor(id) ON DELETE CASCADE
@@ -87,6 +87,7 @@ CREATE TABLE subscripcion (
 	usuario VARCHAR(32) NOT NULL,
 	estado VARCHAR(20) NOT NULL,
 	tipo VARCHAR(20) NOT NULL,
+	fecha_inicio DATE NOT NULL
 	FOREIGN KEY (usuario) REFERENCES usuario(nombre_usuario) ON DELETE CASCADE	
 );
 
