@@ -4,33 +4,26 @@ import psycopg2
 from tkinter import *
 from tkinter import ttk
 import tkinter.font as tkFont
+from busqueda_contenido import *
 
 background = '#ffe4e1'
 foreground = '#79a1e0'
 root = Tk()
 mf = Frame(root)
-mf.pack(fill=BOTH, expand=1)
 mc = Canvas(mf, width=400, height=500,)
 mc.grid_propagate(False)
 mc.pack_propagate(False)
 ms = ttk.Scrollbar(mf, orient=VERTICAL, command=mc.yview)
 window = Frame(mc)
-window.bind('<Configure>', lambda e: mc.configure(scrollregion = mc.bbox("all")))
-mc.create_window((0,0), window=window, anchor = 'nw')
-mc.configure(yscrollcommand=ms.set)
-mf.place(relx =0.5, rely =0.5, anchor= "center")
-mc.pack(side='left', fill='both', expand = True)
-mc.config(bg=background)
-ms.pack(side=RIGHT, fill=Y)
-
-
-
-usuario = input("Ingrese su usuario: ")
-
 
 botonesFont = tkFont.Font(family="@MS UI Gothic", size=16, weight="bold" )
 loginFont = tkFont.Font(family="@MS UI Gothic", size=8, weight="bold" )
 
+usuario = ""
+def setUsuario(usuarioinput):
+    global usuario
+
+    usuario = usuarioinput
 
 def nuevo():
     for widgets in window.winfo_children():
@@ -48,7 +41,7 @@ def nuevo():
 
 def click():
     name = window.entry.get()
-    connection = psycopg2.connect(database="proyecto2", user="postgres", password="videogamesfan10", host="localhost", port=5432)
+    connection = psycopg2.connect("host=localhost dbname=proyecto_2 user=postgres password=rwby123")
     cursor = connection.cursor()
     cursor.execute('''SELECT COUNT(*) FROM perfil''')
     cantidad = cursor.fetchall()
@@ -107,7 +100,7 @@ def click():
 def hola():
     for widgets in window.winfo_children():
       widgets.destroy()
-    connection = psycopg2.connect(database="proyecto2", user="postgres", password="videogamesfan10", host="localhost", port=5432)
+    connection = psycopg2.connect("host=localhost dbname=proyecto_2 user=postgres password=rwby123")
     cursor = connection.cursor()
     cursor.execute('''SELECT COUNT(*) FROM perfil''')
     cantidad = cursor.fetchall()
@@ -135,7 +128,7 @@ def hola():
     connection.close()
     
 def select(X):
-    connection = psycopg2.connect(database="proyecto2", user="postgres", password="videogamesfan10", host="localhost", port=5432)
+    connection = psycopg2.connect("host=localhost dbname=proyecto_2 user=postgres password=rwby123")
     cursor = connection.cursor()
     cursor.execute('''SELECT COUNT(*) FROM perfil''')
     cantidad = cursor.fetchall()
@@ -154,14 +147,26 @@ def select(X):
     print("El usario elegido fue " + elegido + "\n")
     cursor.execute(f'''SELECT * FROM favoritos WHERE perfil_id = '{result2[X][2]}';''')
     result4 = cursor.fetchall()
-    print(f"Contenido Visto:\n {result4}")
+    root.destroy()
+    UI_busqueda(result2[X][2])
+    #print(f"Contenido Visto:\n {result4}")
 
 
 
 def perfiles():
+    print(usuario)
+    print("Usuario arriba")
+    mf.pack(fill=BOTH, expand=1)
+    window.bind('<Configure>', lambda e: mc.configure(scrollregion = mc.bbox("all")))
+    mc.create_window((0,0), window=window, anchor = 'nw')
+    mc.configure(yscrollcommand=ms.set)
+    mf.place(relx =0.5, rely =0.5, anchor= "center")
+    mc.pack(side='left', fill='both', expand = True)
+    mc.config(bg=background)
+    ms.pack(side=RIGHT, fill=Y)
     for widgets in window.winfo_children():
       widgets.destroy()
-    connection = psycopg2.connect(database="proyecto2", user="postgres", password="videogamesfan10", host="localhost", port=5432)
+    connection = psycopg2.connect("host=localhost dbname=proyecto_2 user=postgres password=rwby123")
     cursor = connection.cursor()
     cursor.execute('''SELECT COUNT(*) FROM perfil''')
     cantidad = cursor.fetchall()
@@ -190,10 +195,7 @@ def perfiles():
     connection.commit()
     connection.close()
 
- 
 
-
-perfiles()
 
 
 

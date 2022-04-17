@@ -52,4 +52,3 @@ def loginInfo(usuario, contraseña):
         conn.commit()
         return False
 
-loginInfo("junwoolee", "bts123")

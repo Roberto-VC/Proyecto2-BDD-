@@ -215,9 +215,9 @@ def UI_busqueda(id_perfil):
     buscar.place(relx = 0.6, rely=0.35, anchor="center")
 
     favoritos = tk.Button(searchWindow, bg=background, width=15, height=3, text="Favoritos", font=searchFont)
-    historial = tk.Button(searchWindow, bg=background, width=15, height=3, text="Historial", font=searchFont)
+    historial = tk.Button(searchWindow, bg=background, width=15, height=3, text="Historial", font=searchFont, command=lambda: UI_historial(id_perfil))
     recomendaciones = tk.Button(searchWindow, bg=background, width=15, height=3, text="Recomendaciones", font=searchFont)
-    volver = tk.Button(searchWindow, bg=background, width=8, height=3, text="Volver", font=searchFont)
+    volver = tk.Button(searchWindow, bg=background, width=8, height=3, text="Cerrar", font=searchFont, command= lambda: searchWindow.destroy())
     favoritos.place(relx=0.3, rely=0.4)
     historial.place(relx=0.45, rely=0.4)
     recomendaciones.place(relx=0.6, rely=0.4)
@@ -229,5 +229,4 @@ def UI_busqueda(id_perfil):
     searchWindow.resizable(False,False)
     searchWindow.mainloop()
 
-UI_busqueda("2002")
-
+UI_busqueda("6")

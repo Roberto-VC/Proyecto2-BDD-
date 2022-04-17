@@ -115,7 +115,7 @@ def UI_historial(id_perfil):
     foreground = '#79a1e0'
     
     historialWindow = tk.Tk(className="Streameo (Working Title)")
-    historialFont = tkFont.Font(family="@MS UI Gothic", size=7, weight="bold" )
+    historialFont = tkFont.Font(family="@MS UI Gothic", size=1, weight="bold" )
 
     containerHistorial = tk.Frame(historialWindow)
     resultadosHistorial = tk.Canvas(containerHistorial, width=400, height=500, bg=background)
@@ -142,10 +142,10 @@ def UI_historial(id_perfil):
     historial(scrollable_frame, id_perfil)
 
 
-    volver = tk.Button(historialWindow, bg=background, width=8, height=3, text="Volver", font=historialFont)
-    refresh = tk.Button(historialWindow, bg=background, width=8, height=3, text="Refresh", font=historialFont, command=historial(scrollable_frame, id_perfil))
-    volver.place(relx= 0.05, rely=0.01)
-    refresh.place(relx=0.2, rely=0.01)
+    volver = tk.Button(master=historialWindow, bg=background, width=3, height=1, text="Volver", font=historialFont, command=lambda: historialWindow.destroy())
+    refresh = tk.Button(master=historialWindow, bg=background, width=3, height=1, text="Refresh", font=historialFont, command=lambda: historial(scrollable_frame, id_perfil))
+    volver.grid(row=0, column=0, padx=10, pady=1)
+    refresh.grid(row=0, column=1, padx=10, pady=1)
 
     #Configuraciones extra de ventana
     historialWindow.configure(bg=foreground)
@@ -153,5 +153,4 @@ def UI_historial(id_perfil):
     historialWindow.resizable(False,False)
     historialWindow.mainloop()
 
-
-UI_historial('2002')
+#UI_historial("6")
