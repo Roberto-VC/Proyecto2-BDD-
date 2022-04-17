@@ -3,10 +3,12 @@ from datetime import date
 import tkinter as tk
 from tkinter import OptionMenu, Scrollbar, StringVar, messagebox
 import tkinter.font as tkFont
-
+import pafy
+import keyboard
+import vlc
 import time
 
-conn = psycopg2.connect("host=localhost dbname=proyecto2 user=postgres password=videogamesfan10")
+conn = psycopg2.connect("host=localhost dbname=proyecto_2 user=postgres password=rwby123")
 cur = conn.cursor()
 
 def registrar_historial(id_contenido, id_perfil):

@@ -4,7 +4,7 @@ import tkinter.font as tkFont
 from tkcalendar import *
 
 import psycopg2
-conn = psycopg2.connect("host=localhost dbname=proyecto2 user=postgres password=videogamesfan10")
+conn = psycopg2.connect("host=localhost dbname=proyecto_2 user=postgres password=rwby123")
 cur = conn.cursor()
 
 background = '#ffe4e1'
@@ -563,18 +563,30 @@ loginFont = tkFont.Font(family="@MS UI Gothic", size=8, weight="bold" )
 #Render del logo de la aplicacion
 
 
+def inicializacionAdmin():
+    window.deiconify()
+    entryarea.place(relx=0.5, rely=0.62, anchor="center")
+    botonlogin.place(relx=0.5, rely=0.2, anchor="center")
+    botonsignup.place(relx=0.5, rely=0.5, anchor="center")
+    botonsalir.place(relx=0.5, rely=0.8, anchor="center")
+    #Configuraciones extra de ventana
+    window.configure(bg=background)
+    window.geometry("900x500")
+    window.resizable(False,False)
+    window.mainloop()
+
 #Area de inicio, con botones para ir a login, sign up y salir de la aplicacion
 entryarea = tk.Canvas(window, width=350, height=300, bg=foreground)
-entryarea.place(relx=0.5, rely=0.62, anchor="center")
+#entryarea.place(relx=0.5, rely=0.62, anchor="center")
 
 botonlogin = tk.Button(entryarea, bg=background, width=20, height=3, text="Contenido", font=botonesFont, command=lambda: renderContenido())
-botonlogin.place(relx=0.5, rely=0.2, anchor="center")
+#botonlogin.place(relx=0.5, rely=0.2, anchor="center")
 
 botonsignup = tk.Button(entryarea, bg=background, width=20, height=3, text="Usuarios", font=botonesFont, command=lambda: renderUsuarios())
-botonsignup.place(relx=0.5, rely=0.5, anchor="center")
+#botonsignup.place(relx=0.5, rely=0.5, anchor="center")
 
 botonsalir = tk.Button(entryarea, bg=background, width=20, height=3, text="Anuncios", font=botonesFont, command=lambda: renderAnuncios())
-botonsalir.place(relx=0.5, rely=0.8, anchor="center")
+#botonsalir.place(relx=0.5, rely=0.8, anchor="center")
 
 botonagregarC = tk.Button(entryarea, bg=background, width=20, height=2, text="Agregar", font=botonesFont, command=lambda: renderMultimedia())
 
@@ -669,8 +681,5 @@ relacionarRP = tk.Button(entryarea, bg=background, width=10, height=2, text="Eli
 
 
 
-#Configuraciones extra de ventana
-window.configure(bg=background)
-window.geometry("900x500")
-window.resizable(False,False)
-window.mainloop()
+
+

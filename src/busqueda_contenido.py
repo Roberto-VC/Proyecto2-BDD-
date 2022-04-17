@@ -229,4 +229,4 @@ def UI_busqueda(id_perfil, subscripcion):
     searchWindow.resizable(False,False)
     searchWindow.mainloop()
 
-#UI_busqueda("6")
+#UI_busqueda("6", "2")
