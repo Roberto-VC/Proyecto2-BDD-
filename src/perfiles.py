@@ -4,12 +4,18 @@ import psycopg2
 from tkinter import *
 import tkinter.font as tkFont
 
+from busqueda_contenido import UI_busqueda
+
 background = '#ffe4e1'
 foreground = '#79a1e0'
 
 
 
-usuario = input("Ingrese su usuario: ")
+usuario = ""
+def setUsuario(inputUsuario):
+    global usuario
+    usuario = inputUsuario
+
 window = Tk(className="Streameo (Working title)")
 window.title("Register")
 window.withdraw()
@@ -33,7 +39,7 @@ def nuevo():
 
 def click():
     name = window.entry.get()
-    connection = psycopg2.connect(database="proyecto2", user="postgres", password="videogamesfan10", host="localhost", port=5432)
+    connection = psycopg2.connect("host=localhost dbname=proyecto_2 user=postgres password=rwby123")
     cursor = connection.cursor()
     cursor.execute('''SELECT COUNT(*) FROM perfil''')
     cantidad = cursor.fetchall()
@@ -92,7 +98,7 @@ def click():
 def hola():
     for widgets in window.winfo_children():
       widgets.destroy()
-    connection = psycopg2.connect(database="proyecto2", user="postgres", password="videogamesfan10", host="localhost", port=5432)
+    connection = psycopg2.connect("host=localhost dbname=proyecto_2 user=postgres password=rwby123")
     cursor = connection.cursor()
     cursor.execute('''SELECT COUNT(*) FROM perfil''')
     cantidad = cursor.fetchall()
@@ -121,7 +127,7 @@ def hola():
     connection.close()
     
 def select(X):
-    connection = psycopg2.connect(database="proyecto2", user="postgres", password="videogamesfan10", host="localhost", port=5432)
+    connection = psycopg2.connect("host=localhost dbname=proyecto_2 user=postgres password=rwby123")
     cursor = connection.cursor()
     cursor.execute('''SELECT COUNT(*) FROM perfil''')
     cantidad = cursor.fetchall()
@@ -141,6 +147,8 @@ def select(X):
     cursor.execute(f'''SELECT * FROM favoritos WHERE perfil_id = '{result2[X][2]}';''')
     result4 = cursor.fetchall()
     print(f"Contenido Visto:\n {result4}")
+    window.destroy()
+    UI_busqueda(result2[X][2])
 
 
 
@@ -148,7 +156,7 @@ def perfiles():
     window.deiconify()
     for widgets in window.winfo_children():
       widgets.destroy()
-    connection = psycopg2.connect(database="proyecto2", user="postgres", password="videogamesfan10", host="localhost", port=5432)
+    connection = psycopg2.connect("host=localhost dbname=proyecto_2 user=postgres password=rwby123")
     cursor = connection.cursor()
     cursor.execute('''SELECT COUNT(*) FROM perfil''')
     cantidad = cursor.fetchall()
@@ -175,7 +183,7 @@ def perfiles():
     window.mainloop()
     connection.commit()
     connection.close()
-perfiles()
+
 
  
 

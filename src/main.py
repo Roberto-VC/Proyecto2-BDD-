@@ -37,17 +37,14 @@ def UI_signup(botonlogin, botonsignup, botonsalir, entryarea):
     clicked.set("Basica")
     typeMenu = OptionMenu(entryarea, clicked, "Basica", "Estandar", "Avanzada")
     typeMenu.place(relx=0.45, rely=0.7, anchor="w")
-
-    buttonSignup = tk.Button(entryarea, bg=background, width=10, height=2, text="Crear cuenta", font=SignupFont, command=lambda: signup(username,password,email,accountType))
+    
+    buttonSignup = tk.Button(entryarea, bg=background, width=10, height=2, text="Crear cuenta", font=SignupFont, command=lambda: signup(userInput.get(), passInput.get(), mailInput.get(), clicked.get()))
     buttonSignup.place(relx=0.1, rely=0.9, anchor="w")
 
-    buttonReturn = tk.Button(entryarea, bg=background, width=10, height=2, text="Volver", font=SignupFont, command=lambda: renderStartFromSignup())
+    buttonReturn = tk.Button(entryarea, bg=background, width=10, height=2, text="Volver", font=SignupFont, command=lambda: renderStartFromSignup(entryarea, botonlogin, botonsignup, botonsalir))
     buttonReturn.place(relx=0.9, rely=0.9, anchor="e")
 
-    username = userInput.get()
-    email = mailInput.get()
-    password = passInput.get()
-    accountType = clicked.get()
+
 
 def signup(username, password, email, accountType):
     #Hashing del password
@@ -55,8 +52,14 @@ def signup(username, password, email, accountType):
     pass_byte = bytes(password, 'utf-8')
     hashed = bcrypt.hashpw(pass_byte, bcrypt.gensalt(10))
     hashed = hashed.decode("utf-8")
-    
 
+    if accountType=="Basica":
+        accountType="1"
+    elif accountType=="Estandar":
+        accountType="2"
+    elif accountType=="Avanzada":
+        accountType="3"
+    
     
     if(len(username) == 0 or len(email)== 0 or len(password) == 0 or set(username) & set(disallowedchars) or set(email) & set(disallowedchars) or set(password) & set(disallowedchars)):
         tk.messagebox.showinfo("Error de datos", "Datos ingresados invalidos")
@@ -69,7 +72,8 @@ def signup(username, password, email, accountType):
             
             cur.execute("INSERT INTO subscripcion (usuario, estado, tipo) values (%s, %s, %s)",
                             (username, state, accountType))
-        
+
+            conn.commit()
             tk.messagebox.showinfo("Cuenta creada", "Cuenta Creada")
         
         except Exception as E:
@@ -104,8 +108,14 @@ def renderStart(inputUsuario, inputContra, volverMenu, loguearse, botonlogin, bo
     botonsalir.place(relx=0.5, rely=0.8, anchor="center")
     entryarea.configure(width=350, height=300)
 
-def renderStartFromSignup():
-    print("Hello mom")
+def renderStartFromSignup(entryarea, botonlogin, botonsignup, botonsalir):
+    for widget in entryarea.winfo_children():
+        widget.place_forget()
+    
+    botonlogin.place(relx=0.5, rely=0.2, anchor="center")
+    botonsignup.place(relx=0.5, rely=0.5, anchor="center")
+    botonsalir.place(relx=0.5, rely=0.8, anchor="center")
+    entryarea.configure(width=350, height=300)
 
 
 def clear_entradas(inputContra, entry):
