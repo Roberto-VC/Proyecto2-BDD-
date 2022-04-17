@@ -84,8 +84,8 @@ def mainScreen():
     inputUsuario.bind("<Button-1>", lambda event: clear_entradas(event, inputUsuario))
     inputContra = tk.Entry(entryarea, width=30)
     inputContra.bind("<Button-1>", lambda event: clear_entradas(event, inputContra))
-    volverMenu = tk.Button(entryarea, bg=background, width=10, height=2, text="Volver", font=loginFont, command=lambda: renderStart(inputUsuario, inputContra, volverMenu, loguearse, botonlogin, botonsignup, botonsalir, entryarea))
-    loguearse = tk.Button(entryarea, bg=background, width=10, height=2, text="Login", font=loginFont, command=lambda: logueandose(inputUsuario, inputContra, window))
+    volverMenu = tk.Button(entryarea, bg=background, width=3, height=1, text="Volver", font=loginFont, command=lambda: renderStart(inputUsuario, inputContra, volverMenu, loguearse, botonlogin, botonsignup, botonsalir, entryarea), padx=8, pady=1)
+    loguearse = tk.Button(entryarea, bg=background, width=3, height=1, text="Login", font=loginFont, command=lambda: logueandose(inputUsuario, inputContra, window), padx=5, pady=1)
 
     #Configuraciones extra de ventana
     window.configure(bg=background)

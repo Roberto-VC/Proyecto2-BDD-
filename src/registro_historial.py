@@ -142,8 +142,8 @@ def UI_historial(id_perfil):
     historial(scrollable_frame, id_perfil)
 
 
-    volver = tk.Button(master=historialWindow, bg=background, width=3, height=1, text="Volver", font=historialFont, command=lambda: historialWindow.destroy())
-    refresh = tk.Button(master=historialWindow, bg=background, width=3, height=1, text="Refresh", font=historialFont, command=lambda: historial(scrollable_frame, id_perfil))
+    volver = tk.Button(master=historialWindow, bg=background, width=3, height=1, text="Volver", font=historialFont, command=lambda: historialWindow.destroy(), padx=10, pady=1)
+    refresh = tk.Button(master=historialWindow, bg=background, width=3, height=1, text="Refresh", font=historialFont, command=lambda: historial(scrollable_frame, id_perfil), padx=15, pady=1)
     volver.grid(row=0, column=0, padx=10, pady=1)
     refresh.grid(row=0, column=1, padx=10, pady=1)
 

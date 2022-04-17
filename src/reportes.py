@@ -1,7 +1,6 @@
 import psycopg2
 import tkinter as tk
 from tkinter import *
-from tkcalendar import *
 import tkinter.font as tkFont
 from tkinter import OptionMenu, Scrollbar, StringVar, messagebox
 from datetime import date
