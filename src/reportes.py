@@ -1,6 +1,7 @@
 import psycopg2
 import tkinter as tk
 from tkinter import *
+from tkcalendar import *
 import tkinter.font as tkFont
 from tkinter import OptionMenu, Scrollbar, StringVar, messagebox
 from datetime import date
@@ -48,10 +49,10 @@ def create_screenUI(tittle):
 def top10_genre():
     window, Font = create_screenUI("top10_genre")
     
-    initialCal = Calendar(window, setmode ='day', date_pattern = 'yy/m/d')
+    initialCal = Calendar(window, setmode ='day', date_pattern = 'yyyy-mm-dd')
     initialCal.place(relx=0.3, rely=0.4, anchor="e")
     
-    endCal = Calendar(window, setmode ='day', date_pattern = 'yy/m/d')
+    endCal = Calendar(window, setmode ='day', date_pattern = 'yyyy-mm-dd')
     endCal.place(relx=0.45, rely=0.4, anchor="center")
 
 
@@ -66,21 +67,45 @@ def top10_genre_report(initial, final, report_area, Font):
     initial_date = initial.get_date()
     final_date = final.get_date()
     
-    userText = Label(report_area, text = initial_date, bg = foreground, font = Font)
-    userText.place(relx=0.1, rely=0.2, anchor="w")
-    
-    userText2 = Label(report_area, text = final_date, bg = foreground, font = Font)
-    userText2.place(relx=0.1, rely=0.4, anchor="w")    
 
-  
+    
+    conn = psycopg2.connect("host=localhost dbname=proyecto_2 user=postgres password=12345")
+    cur = conn.cursor()
+    cur.execute("""
+        SELECT  generos.nombre, SUM(multimedia.duracion) 
+        FROM    generos
+        JOIN    genero_contenido ON genero_contenido.id_genero = generos.id_genero
+        JOIN    multimedia ON multimedia.id = genero_contenido.id_contenido
+        JOIN    historial ON historial.id_contenido = multimedia.id
+        WHERE   historial.id_contenido = multimedia.id
+        AND     historial.fecha_visualizacion >  %(initial_date)s
+        AND     historial.fecha_visualizacion < %(final_date)s
+        GROUP BY    generos.nombre
+        ORDER BY    COUNT(generos.nombre) DESC
+        """, {
+            'initial_date': initial_date,
+            'final_date': final_date
+        })
+    
+    report = cur.fetchall()
+    x = 1
+    y = 0.2
+    for i in report:
+        txt = str(x) + '.'+ i[0] + ' con '+ str(i[1]) + ' minutos'
+        info = Label(report_area, text = txt, bg = foreground, font = Font)
+        info.place(relx=0.1, rely=y, anchor="w")
+        x = x+1
+        y = y+0.1
+       
+    conn.close()
 
 def reproduction_amount():
     window, Font = create_screenUI("reproduction_amount")
     
-    initialCal = Calendar(window, setmode ='day', date_pattern = 'yy/m/d')
+    initialCal = Calendar(window, setmode ='day', date_pattern = 'yyyy-mm-dd')
     initialCal.place(relx=0.3, rely=0.4, anchor="e")
     
-    endCal = Calendar(window, setmode ='day', date_pattern = 'yy/m/d')
+    endCal = Calendar(window, setmode ='day', date_pattern = 'yyyy-mm-dd')
     endCal.place(relx=0.45, rely=0.4, anchor="center")
 
 
@@ -94,12 +119,32 @@ def reproduction_amount_report(initial, final, report_area, Font):
     initial_date = initial.get_date()
     final_date = final.get_date()
     
-    userText = Label(report_area, text = initial_date, bg = foreground, font = Font)
-    userText.place(relx=0.1, rely=0.2, anchor="w")
+    conn = psycopg2.connect("host=localhost dbname=proyecto_2 user=postgres password=12345")
+    cur = conn.cursor()
+    cur.execute("""
+        SELECT  subscripcion.tipo, COUNT(historial.fecha_visualizacion)
+        FROM    subscripcion
+        JOIN    perfil ON perfil.usuario = subscripcion.usuario
+        JOIN    historial ON historial.id_perfil = perfil.id
+        WHERE   historial.fecha_visualizacion > %(initial_date)s
+        AND     historial.fecha_visualizacion < %(final_date)s
+        GROUP BY    subscripcion.tipo
+        """, {
+            'initial_date': initial_date,
+            'final_date': final_date
+        })
     
-    userText2 = Label(report_area, text = final_date, bg = foreground, font = Font)
-    userText2.place(relx=0.1, rely=0.4, anchor="w")    
-    
+    report = cur.fetchall()
+    x = 1
+    y = 0.2
+    for i in report:
+        txt = 'Cuenta '+ i[0] + ' con '+ str(i[1]) + ' reproducciones'
+        info = Label(report_area, text = txt, bg = foreground, font = Font)
+        info.place(relx=0.05, rely=y, anchor="w")
+        x = x+1
+        y = y+0.1
+       
+    conn.close()
     
     
 def top10_staff():
@@ -138,8 +183,6 @@ def premium_accounts():
     entryarea = tk.Canvas(window, width=600, height=300, bg=foreground)
     entryarea.place(relx=0.5, rely=0.5, anchor="center")
     
-    number_txt = Label(entryarea, text = "69", bg = foreground, font = number_font)
-    number_txt.place(relx=0.5, rely=0.15, anchor="center")
     
     fecha = date.today()
     today_year = int(fecha.strftime("%Y"))
@@ -149,94 +192,84 @@ def premium_accounts():
     
     if (today_month == "01"):
         today_year = today_year - 1 
-        print("year: ", today_year)
-        print("month: 7")
-        
         today_year = str(today_year)
         whole_date = today_year + "-" + "07" + "-" + today_day
 
         
     elif (today_month =="02"):
         today_year = today_year - 1 
-        print("year: ", today_year)
-        print("month: 8")
-        
         today_year = str(today_year)
         whole_date = today_year + "-" + "08" + "-" + today_day
         
     elif (today_month =="03"):
         today_year = today_year - 1 
-        print("year: ", today_year)
-        print("month: 9")
-        
         today_year = str(today_year)
         whole_date = today_year + "-" + "09" + "-" + today_day
         
     elif (today_month =="04"):
         today_year = today_year - 1 
-        print("year: ", today_year)
-        print("month: 10")
-        
         today_year = str(today_year)
         whole_date = today_year + "-" + "10" + "-" + today_day
         
+        
     elif (today_month =="05"):
         today_year = today_year - 1 
-        print("year: ", today_year)
-        print("month: 11")
-        
         today_year = str(today_year)
         whole_date = today_year + "-" + "11" + "-" + today_day
         
     elif (today_month =="06"):
         today_year = today_year - 1 
-        print("year: ", today_year)
-        print("month: 12")
-        
         today_year = str(today_year)
         whole_date = today_year + "-" + "12" + "-" + today_day
         
     elif (today_month =="07"):
-        print("year: ", today_year)
-        print("month: 1")
-        
         today_year = str(today_year)
         whole_date = today_year + "-" + "01" + "-" + today_day
         
     elif (today_month =="08"):
-        print("year: ", today_year)
-        print("month: 2")
-        
         today_year = str(today_year)
         whole_date = today_year + "-" + "02" + "-" + today_day
         
     elif (today_month =="09"):
-        print("year: ", today_year)
-        print("month: 3")
-        
         today_year = str(today_year)
         whole_date = today_year + "-" + "03" + "-" + today_day
         
     elif (today_month =="10"):
-        print("year: ", today_year)
-        print("month: 4")
-        
         today_year = str(today_year)
         whole_date = today_year + "-" + "04" + "-" + today_day
         
     elif (today_month =="11"):
-        print("year: ", today_year)
-        print("month: 5")
-        
         today_year = str(today_year)
         whole_date = today_year + "-" + "05" + "-" + today_day
         
     elif (today_month =="12"):
-        print("year: ", today_year)
-        print("month: 6")
-        
         today_year = str(today_year)
         whole_date = today_year + "-" + "06" + "-" + today_day
+        
+    conn = psycopg2.connect("host=localhost dbname=proyecto_2 user=postgres password=12345")
+    cur = conn.cursor()
+    cur.execute("""
+    SELECT  tipo, COUNT(tipo)
+    FROM    subscripcion
+    WHERE   fecha_inicio > %(whole_date)s
+    GROUP BY    tipo
+    ORDER BY    COUNT(tipo) DESC
+    """, {
+        'whole_date': whole_date
+    })
+    
+        
+    report = cur.fetchall()
+    print(report)
+    y = 0.2
+    for i in report:
+        if(i[1] > 1):
+            txt != str(i[1]) + ' cuentas de tipo: ' + i[0]
+        elif(i[1] == 1):
+            txt = str(i[1]) + ' cuenta de tipo: ' + i[0]
+        info = Label(entryarea, text = txt, bg = foreground, font = Font)
+        info.place(relx=0.5, rely=y, anchor="center")
+        y = y+0.15
     
 
 
@@ -244,7 +277,7 @@ def premium_accounts():
 def peak_hour():
     window, Font = create_screenUI("peak_hour")
     
-    myCal = Calendar(window, setmode ='day', date_pattern = 'yy/m/d')
+    myCal = Calendar(window, setmode ='day', date_pattern = 'yyyy-mm-dd')
     myCal.place(relx=0.35, rely=0.4, anchor="e")
     
     button_select = tk.Button(window, bg=foreground, width=20, height=2, text="Generar Reporte", font=Font, command=lambda: peak_hour_report(myCal, entryarea, Font))
@@ -255,10 +288,36 @@ def peak_hour():
     
 def peak_hour_report(date, report_area, Font):
     given_date = date.get_date()
+    date_list = given_date.split("-")
     
+    conn = psycopg2.connect("host=localhost dbname=proyecto_2 user=postgres password=12345")
+    cur = conn.cursor()
+    cur.execute("""
+    SELECT  EXTRACT(HOUR FROM   fecha_visualizacion), COUNT(fecha_visualizacion)
+    FROM    historial
+    WHERE   EXTRACT(YEAR FROM fecha_visualizacion) = %(date_list[0])s
+    AND     EXTRACT(MONTH FROM fecha_visualizacion) = %(date_list[1])s
+    AND     EXTRACT(DAY FROM fecha_visualizacion) = %(date_list[2])s
+    GROUP BY    EXTRACT(HOUR FROM   fecha_visualizacion)
+    """, {
+        'date_list[0]': date_list[0],
+        'date_list[1]': date_list[1],
+        'date_list[2]': date_list[2]
+        
+    })
     
-    userText = Label(report_area, text = given_date, bg = foreground, font = Font)
-    userText.place(relx=0.1, rely=0.2, anchor="w")
-
-
+        
+    report = cur.fetchall()
+    
+    try:
+        txt = """
+        El servicio es mas utilizado a las
+        """ + str(report[0][0]) + """ horas
+        """
+        
+        info = Label(report_area, text = txt, bg = foreground, font = Font)
+        info.place(relx=0.5, rely=0.2, anchor="center")
+    except Exception:
+        tk.messagebox.showinfo("Error", "En esa fecha no hay ningun registro de historial")
+        
 main_screen()
