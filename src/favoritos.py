@@ -3,34 +3,16 @@ from datetime import date
 import tkinter as tk
 from tkinter import OptionMenu, Scrollbar, StringVar, messagebox
 import tkinter.font as tkFont
-import pafy
-import keyboard
-import vlc
+
 import time
 
-conn = psycopg2.connect("host=localhost dbname=proyecto_2 user=postgres password=rwby123")
+conn = psycopg2.connect("host=localhost dbname=proyecto2 user=postgres password=videogamesfan10")
 cur = conn.cursor()
 
-def registrar_historial(id_contenido, id_perfil):
-    fecha_visualizacion = date.today()
-    cur.execute("""
-        INSERT INTO historial (
-	        id_contenido, fecha_visualizacion, capitulo, id_perfil
-        )
-        VALUES 
-            (%(id_contenido)s, %(fecha_visualizacion)s, NULL, %(id_perfil)s)
-    """, {
-        'id_contenido': id_contenido,
-        'fecha_visualizacion':fecha_visualizacion,
-        'id_perfil': id_perfil
-    })
-
-    conn.commit()
 
 
 def visualizar(link, id_perfil, id_contenido):
     print(link)
-    registrar_historial(id_contenido, id_perfil) 
     url=link
     video = pafy.new(url)
     best = video.getbest()
@@ -53,7 +35,7 @@ def visualizar(link, id_perfil, id_contenido):
             player.stop()
             return False
 
-def buscar_historial(id_perfil):
+def buscar_favorito(id_perfil):
     cur.execute("""
         SELECT 	nombre, id, links
         FROM	favoritos
@@ -63,26 +45,26 @@ def buscar_historial(id_perfil):
         'id_perfil': id_perfil
     })
 
-    history_records = cur.fetchall()
+    favorite_records = cur.fetchall()
 
-    if history_records is None:
+    if favorite_records is None:
         print("No se ha encontrado ningun resultado")
         return False
     
-    print(history_records)
-    return history_records
+    print(favorite_records)
+    return favorite_records
 
-def historial(scrollable_frame, id_perfil):
+def favorito(scrollable_frame, id_perfil):
     try:
-        listaHistorial = []
-        listaHistorial = buscar_historial(id_perfil)
+        listafavorito = []
+        listafavorito = buscar_favorito(id_perfil)
 
         count=0
-        if listaHistorial:
+        if listafavorito:
             for widget in scrollable_frame.winfo_children():
                 widget.destroy()
 
-            for item in listaHistorial:
+            for item in listafavorito:
                 print(":)")
                 labelTitulo = tk.Label(scrollable_frame, text=item[0], bg='#ffe4e1')
                 print(":D")
@@ -100,48 +82,48 @@ def historial(scrollable_frame, id_perfil):
         
         print("No se encontro ningun resultado :(")
 
-def UI_historial(id_perfil):
+def UI_favorito(id_perfil):
     background = '#ffe4e1'
     foreground = '#79a1e0'
     
-    historialWindow = tk.Tk(className="Streameo (Working Title)")
-    historialFont = tkFont.Font(family="@MS UI Gothic", size=7, weight="bold" )
+    favoritoWindow = tk.Tk(className="Streameo (Working Title)")
+    favoritoFont = tkFont.Font(family="@MS UI Gothic", size=7, weight="bold" )
 
-    containerHistorial = tk.Frame(historialWindow)
-    resultadosHistorial = tk.Canvas(containerHistorial, width=400, height=500, bg=background)
-    resultadosHistorial.grid_propagate(False)
-    resultadosHistorial.pack_propagate(False)
+    containerfavorito = tk.Frame(favoritoWindow)
+    resultadosfavorito = tk.Canvas(containerfavorito, width=400, height=500, bg=background)
+    resultadosfavorito.grid_propagate(False)
+    resultadosfavorito.pack_propagate(False)
 
-    scrollbar = tk.Scrollbar(containerHistorial, orient="vertical", command= resultadosHistorial.yview)
-    scrollable_frame = tk.Frame(resultadosHistorial)
+    scrollbar = tk.Scrollbar(containerfavorito, orient="vertical", command= resultadosfavorito.yview)
+    scrollable_frame = tk.Frame(resultadosfavorito)
     scrollable_frame.configure(bg=background)
     scrollable_frame.bind(
         "<Configure>",
-        lambda e: resultadosHistorial.configure(
-            scrollregion=resultadosHistorial.bbox("all")
+        lambda e: resultadosfavorito.configure(
+            scrollregion=resultadosfavorito.bbox("all")
         )
     )
 
-    resultadosHistorial.create_window((0,0), window=scrollable_frame, anchor="nw")
-    resultadosHistorial.configure(yscrollcommand=scrollbar.set)
+    favorito.create_window((0,0), window=scrollable_frame, anchor="nw")
+    favorito.configure(yscrollcommand=scrollbar.set)
 
-    containerHistorial.place(relx=0.5, rely=0.5, anchor="center")
-    resultadosHistorial.pack(side="left", fill="both", expand=True)
+    favorito.place(relx=0.5, rely=0.5, anchor="center")
+    favorito.pack(side="left", fill="both", expand=True)
     scrollbar.pack(side="right", fill="y")
 
-    historial(scrollable_frame, id_perfil)
+    favorito(scrollable_frame, id_perfil)
 
 
-    volver = tk.Button(historialWindow, bg=background, width=8, height=3, text="Volver", font=historialFont)
-    refresh = tk.Button(historialWindow, bg=background, width=8, height=3, text="Refresh", font=historialFont, command=historial(scrollable_frame, id_perfil))
+    volver = tk.Button(favoritoWindow, bg=background, width=8, height=3, text="Volver", font=favorito)
+    refresh = tk.Button(favorito, bg=background, width=8, height=3, text="Refresh", font=favorito, command=favorito(scrollable_frame, id_perfil))
     volver.place(relx= 0.05, rely=0.01)
     refresh.place(relx=0.2, rely=0.01)
 
     #Configuraciones extra de ventana
-    historialWindow.configure(bg=foreground)
-    historialWindow.geometry("500x600")
-    historialWindow.resizable(False,False)
-    historialWindow.mainloop()
+    favoritoWindow.configure(bg=foreground)
+    favoritoWindow.geometry("500x600")
+    favoritoWindow.resizable(False,False)
+    favoritoWindow.mainloop()
 
 
-UI_historial('AAA')
+UI_favorito('AAA')
