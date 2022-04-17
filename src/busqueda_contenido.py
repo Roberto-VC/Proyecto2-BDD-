@@ -108,8 +108,8 @@ def busqueda(scrollable_frame, busqueda, id_perfil, subscripcion):
                 labelTitulo = tk.Label(scrollable_frame, text=item[0], bg='#ffe4e1')
                 labelLink = tk.Button(scrollable_frame, text="Ver", bg='#ffe4e1', command=lambda x=item[1], y=item[2]:  visualizar(x, id_perfil, y, subscripcion))
                 labelFav = tk.Button(scrollable_frame, text="Fav", bg='#ffe4e1', command=lambda y=item[2]:  registrar_favs(y, id_perfil))
-                labelTitulo.grid(row=count, column=0, padx=100, pady=5)
-                labelLink.grid(row=count, column=1, padx=50)
+                labelTitulo.grid(row=count, column=0, padx=20, pady=5)
+                labelLink.grid(row=count, column=1, padx=20)
                 labelFav.grid(row=count, column=2)
                 count = count + 1
 
@@ -123,8 +123,8 @@ def busqueda(scrollable_frame, busqueda, id_perfil, subscripcion):
                     labelTitulo = tk.Label(scrollable_frame, text=item[0], bg='#ffe4e1')
                     labelLink = tk.Button(scrollable_frame, text="Ver", bg='#ffe4e1', command=lambda x=item[1], y=item[2]:  visualizar(x, id_perfil, y, subscripcion))
                     labelFav = tk.Button(scrollable_frame, text="Fav", bg='#ffe4e1', command=lambda y=item[2]:  registrar_favs(y, id_perfil))
-                    labelTitulo.grid(row=count, column=0, padx=100, pady=5)
-                    labelLink.grid(row=count, column=1, padx=50)
+                    labelTitulo.grid(row=count, column=0, padx=20, pady=5)
+                    labelLink.grid(row=count, column=1, padx=20)
                     labelFav.grid(row=count, column=2)
                     count = count + 1
             else:
@@ -234,4 +234,4 @@ def UI_busqueda(id_perfil, subscripcion):
     searchWindow.resizable(False,False)
     searchWindow.mainloop()
 
-UI_busqueda("6", "2")
+#UI_busqueda("6", "2")
