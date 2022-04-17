@@ -181,7 +181,7 @@ def UI_busqueda(id_perfil):
 
     #Render del logo de la aplicacion
     logoCanvas = tk.Canvas(searchWindow, width = 150, height = 150, highlightthickness=0, bg=foreground)
-    logo = tk.PhotoImage(file="src/assets/streameologo.png")
+    logo = tk.PhotoImage(master=searchWindow, file="src/assets/streameologo.png")
     logoCanvas.create_image(130,10, anchor="ne", image=logo)
     logoCanvas.place(relx=0.49, rely=0.15, anchor="center")
     containerBusqueda = tk.Frame(searchWindow)
