@@ -91,8 +91,11 @@ def top10_genre_report(initial, final, report_area, Font):
     x = 1
     y = 0.2
     for i in report:
+        blank = "                                                  "
         txt = str(x) + '.'+ i[0] + ' con '+ str(i[1]) + ' minutos'
-        info = Label(report_area, text = txt, bg = foreground, font = Font)
+        empty = Label(report_area, text = blank, bg = foreground, font = Font)
+        empty.place(relx=0.1, rely=y, anchor="w")
+        info = Label(report_area, text = txt, bg = foreground,font=("Arial", 10, "normal"))
         info.place(relx=0.1, rely=y, anchor="w")
         x = x+1
         y = y+0.1
@@ -139,7 +142,7 @@ def reproduction_amount_report(initial, final, report_area, Font):
     y = 0.2
     for i in report:
         txt = 'Cuenta '+ i[0] + ' con '+ str(i[1]) + ' reproducciones'
-        info = Label(report_area, text = txt, bg = foreground, font = Font)
+        info = Label(report_area, text = txt, bg = foreground, font = ("Arial", 10, "normal"))
         info.place(relx=0.05, rely=y, anchor="w")
         x = x+1
         y = y+0.1
@@ -151,7 +154,7 @@ def top10_staff():
     window, Font = create_screenUI("top10_staff")
     
     #Crear lado de cuentas normales
-    normal_txt = Label(window, text = "Cuentas Normales", bg = background, font = Font)
+    normal_txt = Label(window, text = "Perfiles Estandar", bg = background, font = Font)
     normal_txt.place(relx=0.3, rely=0.05, anchor="center")
     normalArea = tk.Canvas(window, width=350, height=400, bg=foreground)
     normalArea.place(relx=0.1, rely=0.5, anchor="w")
@@ -162,7 +165,7 @@ def top10_staff():
     normal_actor_txt.place(relx=0.5, rely=0.55, anchor="center")
     
     #Creat lado de cuentas premium
-    premium_text = Label(window, text = "Cuentas Premium", bg = background, font = Font)
+    premium_text = Label(window, text = "Perfiles Avanzados", bg = background, font = Font)
     premium_text.place(relx=0.75, rely=0.05, anchor="center")
     premiumArea = tk.Canvas(window, width=350, height=400, bg=foreground)
     premiumArea.place(relx=0.95, rely=0.5, anchor="e")
@@ -172,7 +175,149 @@ def top10_staff():
     normal_actor_txt = Label(premiumArea, text = "Directores", bg = foreground, font = Font)
     normal_actor_txt.place(relx=0.5, rely=0.55, anchor="center")
     
-
+    conn = psycopg2.connect("host=localhost dbname=proyecto_2 user=postgres password=12345")
+    cur = conn.cursor()
+    cur.execute("""
+    SELECT  actor.nombre_completo, COUNT(actor_contenido.actor_id)
+    FROM    perfil
+    JOIN    subscripcion ON subscripcion.usuario = perfil.usuario
+    JOIN    historial ON historial.id_perfil = perfil.id
+    JOIN    multimedia ON multimedia.id = historial.id_contenido
+    JOIN    actor_contenido ON  actor_contenido.multimedia_id = multimedia.id
+    JOIN    actor ON actor.id = actor_contenido.actor_id
+    WHERE   subscripcion.tipo = 'Basica'
+    GROUP BY    actor.nombre_completo
+    ORDER BY    COUNT(actor_contenido.actor_id) DESC
+    LIMIT       10
+    """)
+    
+    actors_basic = cur.fetchall()
+    
+    conn = psycopg2.connect("host=localhost dbname=proyecto_2 user=postgres password=12345")
+    cur = conn.cursor()
+    cur.execute("""
+    SELECT  director.nombre_completo, COUNT(director_contenido.id)
+    FROM    perfil
+    JOIN    subscripcion ON subscripcion.usuario = perfil.usuario
+    JOIN    historial ON historial.id_perfil = perfil.id
+    JOIN    multimedia ON multimedia.id = historial.id_contenido
+    JOIN    director_contenido ON   director_contenido.multimedia_id = multimedia.id
+    JOIN    director ON director.id = director_contenido.id
+    WHERE   subscripcion.tipo = 'Basica'
+    GROUP BY    director.nombre_completo
+    ORDER BY    COUNT(director_contenido.id) DESC
+    LIMIT       10
+    """)
+    
+    directors_basic = cur.fetchall()
+    
+    x = 1
+    y = 0.15
+    y2 = 0.15
+    for i in actors_basic:
+        if x > 5:
+            txt = str(x) + '.'+ i[0]
+            info = Label(normalArea, text = txt, bg = foreground,font=("Arial", 10, "normal"))
+            info.place(relx=0.55, rely=y2, anchor="w")
+            x = x+1
+            y2 = y2+0.05
+        else: 
+            txt = str(x) + '.'+ i[0]
+            info = Label(normalArea, text = txt, bg = foreground,font=("Arial", 10, "normal"))
+            info.place(relx=0.05, rely=y, anchor="w")
+            x = x+1
+            y = y+0.05
+            
+    x = 1
+    y = 0.65
+    y2 = 0.65
+    for i in directors_basic:
+        if x > 5:
+            txt = str(x) + '.'+ i[0]
+            info = Label(normalArea, text = txt, bg = foreground,font=("Arial", 10, "normal"))
+            info.place(relx=0.55, rely=y2, anchor="w")
+            x = x+1
+            y2 = y2+0.05
+        else: 
+            txt = str(x) + '.'+ i[0]
+            info = Label(normalArea, text = txt, bg = foreground,font=("Arial", 10, "normal"))
+            info.place(relx=0.05, rely=y, anchor="w")
+            x = x+1
+            y = y+0.05
+    
+            
+    
+            
+            
+    conn = psycopg2.connect("host=localhost dbname=proyecto_2 user=postgres password=12345")
+    cur = conn.cursor()
+    cur.execute("""
+    SELECT  actor.nombre_completo, COUNT(actor_contenido.actor_id)
+    FROM    perfil
+    JOIN    subscripcion ON subscripcion.usuario = perfil.usuario
+    JOIN    historial ON historial.id_perfil = perfil.id
+    JOIN    multimedia ON multimedia.id = historial.id_contenido
+    JOIN    actor_contenido ON  actor_contenido.multimedia_id = multimedia.id
+    JOIN    actor ON actor.id = actor_contenido.actor_id
+    WHERE   subscripcion.tipo = 'Basica'
+    GROUP BY    actor.nombre_completo
+    ORDER BY    COUNT(actor_contenido.actor_id) DESC
+    LIMIT       10
+    """)
+    
+    actors_advanzed = cur.fetchall()
+    
+    conn = psycopg2.connect("host=localhost dbname=proyecto_2 user=postgres password=12345")
+    cur = conn.cursor()
+    cur.execute("""
+    SELECT  director.nombre_completo, COUNT(director_contenido.id)
+    FROM    perfil
+    JOIN    subscripcion ON subscripcion.usuario = perfil.usuario
+    JOIN    historial ON historial.id_perfil = perfil.id
+    JOIN    multimedia ON multimedia.id = historial.id_contenido
+    JOIN    director_contenido ON   director_contenido.multimedia_id = multimedia.id
+    JOIN    director ON director.id = director_contenido.id
+    WHERE   subscripcion.tipo = 'Basica'
+    GROUP BY    director.nombre_completo
+    ORDER BY    COUNT(director_contenido.id) DESC
+    LIMIT       10
+    """)
+    
+    directors_advanzed = cur.fetchall()
+    
+    x = 1
+    y = 0.15
+    y2 = 0.15
+    for i in actors_advanzed:
+        if x > 5:
+            txt = str(x) + '.'+ i[0]
+            info = Label(normalArea, text = txt, bg = foreground,font=("Arial", 10, "normal"))
+            info.place(relx=0.55, rely=y2, anchor="w")
+            x = x+1
+            y2 = y2+0.05
+        else: 
+            txt = str(x) + '.'+ i[0]
+            info = Label(normalArea, text = txt, bg = foreground,font=("Arial", 10, "normal"))
+            info.place(relx=0.05, rely=y, anchor="w")
+            x = x+1
+            y = y+0.05
+            
+    x = 1
+    y = 0.65
+    y2 = 0.65
+    for i in directors_advanzed:
+        if x > 5:
+            txt = str(x) + '.'+ i[0]
+            info = Label(normalArea, text = txt, bg = foreground,font=("Arial", 10, "normal"))
+            info.place(relx=0.55, rely=y2, anchor="w")
+            x = x+1
+            y2 = y2+0.05
+        else: 
+            txt = str(x) + '.'+ i[0]
+            info = Label(normalArea, text = txt, bg = foreground,font=("Arial", 10, "normal"))
+            info.place(relx=0.05, rely=y, anchor="w")
+            x = x+1
+            y = y+0.05
 
 def premium_accounts():
     window, Font = create_screenUI("premium_accounts")
