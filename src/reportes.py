@@ -69,7 +69,7 @@ def top10_genre_report(initial, final, report_area, Font):
     
 
     
-    conn = psycopg2.connect("host=localhost dbname=proyecto_2 user=postgres password=12345")
+    conn = psycopg2.connect("host=localhost dbname=proyecto_2 user=postgres password=rwby123")
     cur = conn.cursor()
     cur.execute("""
         SELECT  generos.nombre, SUM(multimedia.duracion) 
@@ -88,6 +88,7 @@ def top10_genre_report(initial, final, report_area, Font):
         })
     
     report = cur.fetchall()
+    txt=""
     x = 1
     y = 0.2
     for i in report:
@@ -122,7 +123,7 @@ def reproduction_amount_report(initial, final, report_area, Font):
     initial_date = initial.get_date()
     final_date = final.get_date()
     
-    conn = psycopg2.connect("host=localhost dbname=proyecto_2 user=postgres password=12345")
+    conn = psycopg2.connect("host=localhost dbname=proyecto_2 user=postgres password=rwby123")
     cur = conn.cursor()
     cur.execute("""
         SELECT  subscripcion.tipo, COUNT(historial.fecha_visualizacion)
@@ -138,6 +139,7 @@ def reproduction_amount_report(initial, final, report_area, Font):
         })
     
     report = cur.fetchall()
+    txt=""
     x = 1
     y = 0.2
     for i in report:
@@ -175,7 +177,7 @@ def top10_staff():
     normal_actor_txt = Label(premiumArea, text = "Directores", bg = foreground, font = Font)
     normal_actor_txt.place(relx=0.5, rely=0.55, anchor="center")
     
-    conn = psycopg2.connect("host=localhost dbname=proyecto_2 user=postgres password=12345")
+    conn = psycopg2.connect("host=localhost dbname=proyecto_2 user=postgres password=rwby123")
     cur = conn.cursor()
     cur.execute("""
     SELECT  actor.nombre_completo, COUNT(actor_contenido.actor_id)
@@ -185,7 +187,7 @@ def top10_staff():
     JOIN    multimedia ON multimedia.id = historial.id_contenido
     JOIN    actor_contenido ON  actor_contenido.multimedia_id = multimedia.id
     JOIN    actor ON actor.id = actor_contenido.actor_id
-    WHERE   subscripcion.tipo = 'Basica'
+    WHERE   subscripcion.tipo = '1'
     GROUP BY    actor.nombre_completo
     ORDER BY    COUNT(actor_contenido.actor_id) DESC
     LIMIT       10
@@ -193,7 +195,7 @@ def top10_staff():
     
     actors_basic = cur.fetchall()
     
-    conn = psycopg2.connect("host=localhost dbname=proyecto_2 user=postgres password=12345")
+    conn = psycopg2.connect("host=localhost dbname=proyecto_2 user=postgres password=rwby123")
     cur = conn.cursor()
     cur.execute("""
     SELECT  director.nombre_completo, COUNT(director_contenido.id)
@@ -203,14 +205,14 @@ def top10_staff():
     JOIN    multimedia ON multimedia.id = historial.id_contenido
     JOIN    director_contenido ON   director_contenido.multimedia_id = multimedia.id
     JOIN    director ON director.id = director_contenido.id
-    WHERE   subscripcion.tipo = 'Basica'
+    WHERE   subscripcion.tipo = '1'
     GROUP BY    director.nombre_completo
     ORDER BY    COUNT(director_contenido.id) DESC
     LIMIT       10
     """)
     
     directors_basic = cur.fetchall()
-    
+    txt=""
     x = 1
     y = 0.15
     y2 = 0.15
@@ -227,7 +229,7 @@ def top10_staff():
             info.place(relx=0.05, rely=y, anchor="w")
             x = x+1
             y = y+0.05
-            
+    txt="" 
     x = 1
     y = 0.65
     y2 = 0.65
@@ -249,7 +251,7 @@ def top10_staff():
     
             
             
-    conn = psycopg2.connect("host=localhost dbname=proyecto_2 user=postgres password=12345")
+    conn = psycopg2.connect("host=localhost dbname=proyecto_2 user=postgres password=rwby123")
     cur = conn.cursor()
     cur.execute("""
     SELECT  actor.nombre_completo, COUNT(actor_contenido.actor_id)
@@ -259,7 +261,7 @@ def top10_staff():
     JOIN    multimedia ON multimedia.id = historial.id_contenido
     JOIN    actor_contenido ON  actor_contenido.multimedia_id = multimedia.id
     JOIN    actor ON actor.id = actor_contenido.actor_id
-    WHERE   subscripcion.tipo = 'Basica'
+    WHERE   subscripcion.tipo = '2' OR subscripcion.tipo='3'
     GROUP BY    actor.nombre_completo
     ORDER BY    COUNT(actor_contenido.actor_id) DESC
     LIMIT       10
@@ -267,7 +269,7 @@ def top10_staff():
     
     actors_advanzed = cur.fetchall()
     
-    conn = psycopg2.connect("host=localhost dbname=proyecto_2 user=postgres password=12345")
+    conn = psycopg2.connect("host=localhost dbname=proyecto_2 user=postgres password=rwby123")
     cur = conn.cursor()
     cur.execute("""
     SELECT  director.nombre_completo, COUNT(director_contenido.id)
@@ -277,44 +279,44 @@ def top10_staff():
     JOIN    multimedia ON multimedia.id = historial.id_contenido
     JOIN    director_contenido ON   director_contenido.multimedia_id = multimedia.id
     JOIN    director ON director.id = director_contenido.id
-    WHERE   subscripcion.tipo = 'Basica'
+    WHERE   subscripcion.tipo = '2' OR subscripcion.tipo='3'
     GROUP BY    director.nombre_completo
     ORDER BY    COUNT(director_contenido.id) DESC
     LIMIT       10
     """)
     
     directors_advanzed = cur.fetchall()
-    
+    txt=""
     x = 1
     y = 0.15
     y2 = 0.15
     for i in actors_advanzed:
         if x > 5:
             txt = str(x) + '.'+ i[0]
-            info = Label(normalArea, text = txt, bg = foreground,font=("Arial", 10, "normal"))
+            info = Label(premiumArea, text = txt, bg = foreground,font=("Arial", 10, "normal"))
             info.place(relx=0.55, rely=y2, anchor="w")
             x = x+1
             y2 = y2+0.05
         else: 
             txt = str(x) + '.'+ i[0]
-            info = Label(normalArea, text = txt, bg = foreground,font=("Arial", 10, "normal"))
+            info = Label(premiumArea, text = txt, bg = foreground,font=("Arial", 10, "normal"))
             info.place(relx=0.05, rely=y, anchor="w")
             x = x+1
             y = y+0.05
-            
+    txt=""
     x = 1
     y = 0.65
     y2 = 0.65
     for i in directors_advanzed:
         if x > 5:
             txt = str(x) + '.'+ i[0]
-            info = Label(normalArea, text = txt, bg = foreground,font=("Arial", 10, "normal"))
+            info = Label(premiumArea, text = txt, bg = foreground,font=("Arial", 10, "normal"))
             info.place(relx=0.55, rely=y2, anchor="w")
             x = x+1
             y2 = y2+0.05
         else: 
             txt = str(x) + '.'+ i[0]
-            info = Label(normalArea, text = txt, bg = foreground,font=("Arial", 10, "normal"))
+            info = Label(premiumArea, text = txt, bg = foreground,font=("Arial", 10, "normal"))
             info.place(relx=0.05, rely=y, anchor="w")
             x = x+1
             y = y+0.05
@@ -391,7 +393,7 @@ def premium_accounts():
         today_year = str(today_year)
         whole_date = today_year + "-" + "06" + "-" + today_day
         
-    conn = psycopg2.connect("host=localhost dbname=proyecto_2 user=postgres password=12345")
+    conn = psycopg2.connect("host=localhost dbname=proyecto_2 user=postgres password=rwby123")
     cur = conn.cursor()
     cur.execute("""
     SELECT  tipo, COUNT(tipo)
@@ -406,10 +408,11 @@ def premium_accounts():
         
     report = cur.fetchall()
     print(report)
+    txt=""
     y = 0.2
     for i in report:
         if(i[1] > 1):
-            txt != str(i[1]) + ' cuentas de tipo: ' + i[0]
+            txt = str(i[1]) + ' cuentas de tipo: ' + i[0]
         elif(i[1] == 1):
             txt = str(i[1]) + ' cuenta de tipo: ' + i[0]
         info = Label(entryarea, text = txt, bg = foreground, font = Font)
@@ -435,7 +438,7 @@ def peak_hour_report(date, report_area, Font):
     given_date = date.get_date()
     date_list = given_date.split("-")
     
-    conn = psycopg2.connect("host=localhost dbname=proyecto_2 user=postgres password=12345")
+    conn = psycopg2.connect("host=localhost dbname=proyecto_2 user=postgres password=rwby123")
     cur = conn.cursor()
     cur.execute("""
     SELECT  EXTRACT(HOUR FROM   fecha_visualizacion), COUNT(fecha_visualizacion)
@@ -465,4 +468,5 @@ def peak_hour_report(date, report_area, Font):
     except Exception:
         tk.messagebox.showinfo("Error", "En esa fecha no hay ningun registro de historial")
         
-main_screen()
+
+#main_screen()

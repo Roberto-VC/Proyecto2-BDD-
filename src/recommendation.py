@@ -16,15 +16,14 @@ foreground = '#79a1e0'
 def recommendation_UI(perfil):
     window = tk.Tk(className="Recomendaciones")
     Font = tkFont.Font(family="@MS UI Gothic", size=12, weight="bold" )
-    window.configure(bg=foreground)
-    window.geometry("500x600")
-    window.resizable(False,False)
-    entryarea = tk.Canvas(window, width=400, height=500, bg=background)
+
+    containerRec = tk.Frame(window)
+    entryarea = tk.Canvas(containerRec, width=400, height=500, bg=background)
     entryarea.place(relx=0.5, rely=0.5, anchor="center")
     entryarea.grid_propagate(False)
     entryarea.pack_propagate(False)
     
-    scrollbar = tk.Scrollbar(entryarea, orient="vertical", command= entryarea.yview)
+    scrollbar = tk.Scrollbar(containerRec, orient="vertical", command= entryarea.yview)
     scrollable_frame = tk.Frame(entryarea)
     scrollable_frame.configure(bg=background)
     scrollable_frame.bind(
@@ -33,8 +32,18 @@ def recommendation_UI(perfil):
             scrollregion=entryarea.bbox("all")
         )
     )
-    
+
+    entryarea.create_window((0,0), window=scrollable_frame, anchor="nw")
+    entryarea.configure(yscrollcommand=scrollbar.set)
+
+
+    containerRec.place(relx=0.5, rely=0.5, anchor="center")
+    entryarea.pack(side="left", fill="both", expand=True)
+    scrollbar.pack(side="right", fill="y")
     recommendation(scrollable_frame, perfil)
+    window.configure(bg=foreground)
+    window.geometry("500x600")
+    window.resizable(False,False)
     window.mainloop()
     
 def visualizar(link, id_perfil, id_contenido):
@@ -62,7 +71,7 @@ def visualizar(link, id_perfil, id_contenido):
             return False
 
 def buscar_reccommendation(id_perfil):
-    conn = psycopg2.connect("host=localhost dbname=proyecto_2 user=postgres password=12345")
+    conn = psycopg2.connect("host=localhost dbname=proyecto_2 user=postgres password=rwby123")
     cur = conn.cursor()
     cur.execute("""
         SELECT  generos.id_genero, COUNT(generos.id_genero) 
@@ -128,7 +137,7 @@ def recommendation(scrollable_frame, id_perfil):
                 labelTitulo = tk.Label(scrollable_frame, text=item[0], bg='#ffe4e1')
                 labelFecha = tk.Label(scrollable_frame, text=item[1], bg='#ffe4e1')
                 labelVisualizar = tk.Button(scrollable_frame, text="Ver", bg='#ffe4e1', command=lambda x=item[2], y=item[2]: visualizar(x, id_perfil, y))
-
+                
                 labelTitulo.grid(row=count, column=0, padx=25, pady=5)
                 labelFecha.grid(row=count, column=1, padx=25)
                 labelVisualizar.grid(row=count, column=2, padx=25)
@@ -140,7 +149,6 @@ def recommendation(scrollable_frame, id_perfil):
         
         print("No se encontro ningun resultado :(")
         
-recommendation_UI("p02") 
     
 
 

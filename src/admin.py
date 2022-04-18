@@ -2,7 +2,7 @@ import tkinter as tk
 from tkinter import messagebox
 import tkinter.font as tkFont
 from tkcalendar import *
-
+from reportes import main_screen
 import psycopg2
 conn = psycopg2.connect("host=localhost dbname=proyecto_2 user=postgres password=rwby123")
 cur = conn.cursor()
@@ -563,11 +563,16 @@ loginFont = tkFont.Font(family="@MS UI Gothic", size=8, weight="bold" )
 #Render del logo de la aplicacion
 
 
+def renderReportes(window):
+    window.destroy()
+    main_screen()
+
 def inicializacionAdmin():
     window.deiconify()
     entryarea.place(relx=0.5, rely=0.62, anchor="center")
     botonlogin.place(relx=0.5, rely=0.2, anchor="center")
-    botonsignup.place(relx=0.5, rely=0.5, anchor="center")
+    botonsignup.place(relx=0.5, rely=0.4, anchor="center")
+    botonReportes.place(relx=0.5, rely=0.6, anchor="center")
     botonsalir.place(relx=0.5, rely=0.8, anchor="center")
     #Configuraciones extra de ventana
     window.configure(bg=background)
@@ -576,7 +581,7 @@ def inicializacionAdmin():
     window.mainloop()
 
 #Area de inicio, con botones para ir a login, sign up y salir de la aplicacion
-entryarea = tk.Canvas(window, width=350, height=300, bg=foreground)
+entryarea = tk.Canvas(window, width=350, height=400, bg=foreground)
 #entryarea.place(relx=0.5, rely=0.62, anchor="center")
 
 botonlogin = tk.Button(entryarea, bg=background, width=20, height=3, text="Contenido", font=botonesFont, command=lambda: renderContenido())
@@ -584,6 +589,8 @@ botonlogin = tk.Button(entryarea, bg=background, width=20, height=3, text="Conte
 
 botonsignup = tk.Button(entryarea, bg=background, width=20, height=3, text="Usuarios", font=botonesFont, command=lambda: renderUsuarios())
 #botonsignup.place(relx=0.5, rely=0.5, anchor="center")
+
+botonReportes = tk.Button(entryarea, bg=background, width=20, height=3, text="Reportes", font=botonesFont, command=lambda: renderReportes(window))
 
 botonsalir = tk.Button(entryarea, bg=background, width=20, height=3, text="Anuncios", font=botonesFont, command=lambda: renderAnuncios())
 #botonsalir.place(relx=0.5, rely=0.8, anchor="center")
@@ -679,7 +686,7 @@ relacionarRA = tk.Button(entryarea, bg=background, width=10, height=2, text="Eli
 relacionarRD = tk.Button(entryarea, bg=background, width=10, height=2, text="Eliminar", font=loginFont, command=lambda: RelacionarRD(inputUsuario.get(), inputUsuario2.get()))
 relacionarRP = tk.Button(entryarea, bg=background, width=10, height=2, text="Eliminar", font=loginFont, command=lambda: RelacionarRP(inputUsuario.get(), inputUsuario2.get()))
 
-
+#inicializacionAdmin()
 
 
 

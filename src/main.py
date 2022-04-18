@@ -53,6 +53,8 @@ def signup(username, password, email, accountType):
     pass_byte = bytes(password, 'utf-8')
     hashed = bcrypt.hashpw(pass_byte, bcrypt.gensalt(10))
     hashed = hashed.decode("utf-8")
+    fecha = date.today()
+    today_date = fecha.strftime("%Y-%m-%d")
 
     if accountType=="Basica":
         accountType="1"
@@ -71,8 +73,8 @@ def signup(username, password, email, accountType):
             cur.execute("INSERT INTO usuario (nombre_usuario, contraseña, correo, estado) values (%s, %s, %s, %s)",
                     (username, hashed, email, state))
             
-            cur.execute("INSERT INTO subscripcion (usuario, estado, tipo) values (%s, %s, %s)",
-                            (username, state, accountType))
+            cur.execute("INSERT INTO subscripcion (usuario, estado, tipo,fecha_inicio) values (%s, %s, %s, %s)",
+                            (username, state, accountType, today_date))
 
             conn.commit()
             tk.messagebox.showinfo("Cuenta creada", "Cuenta Creada")

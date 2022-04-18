@@ -8,6 +8,7 @@ import time
 import keyboard
 from favoritos import UI_favorito, registrar_favs
 from registro_historial import *
+from recommendation import recommendation_UI
 
 conn = psycopg2.connect("host=localhost dbname=proyecto_2 user=postgres password=rwby123")
 cur = conn.cursor()
@@ -221,7 +222,7 @@ def UI_busqueda(id_perfil, subscripcion):
 
     favoritos = tk.Button(searchWindow, bg=background, width=15, height=3, text="Favoritos", font=searchFont, command=lambda: UI_favorito(id_perfil))
     historial = tk.Button(searchWindow, bg=background, width=15, height=3, text="Historial", font=searchFont, command=lambda: UI_historial(id_perfil))
-    recomendaciones = tk.Button(searchWindow, bg=background, width=15, height=3, text="Recomendaciones", font=searchFont)
+    recomendaciones = tk.Button(searchWindow, bg=background, width=15, height=3, text="Recomendaciones", font=searchFont, command = lambda: recommendation_UI(id_perfil))
     volver = tk.Button(searchWindow, bg=background, width=8, height=3, text="Cerrar", font=searchFont, command= lambda: searchWindow.destroy())
     favoritos.place(relx=0.3, rely=0.4)
     historial.place(relx=0.45, rely=0.4)
