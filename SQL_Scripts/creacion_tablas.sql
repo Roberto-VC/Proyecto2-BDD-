@@ -87,7 +87,7 @@ CREATE TABLE subscripcion (
 	usuario VARCHAR(32) NOT NULL,
 	estado VARCHAR(20) NOT NULL,
 	tipo VARCHAR(20) NOT NULL,
-	fecha_inicio DATE NOT NULL
+	fecha_inicio DATE NOT NULL,
 	FOREIGN KEY (usuario) REFERENCES usuario(nombre_usuario) ON DELETE CASCADE	
 );
 
